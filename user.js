@@ -31,6 +31,22 @@ async function submitUser(submission) {
   }
 }
 
+async function validateUser(submission) {
+  try {
+    const database = client.db(dbName);
+    const collection = database.collection(collectionName);
+
+    const response = await collection.countDocuments(submission, { projection: { limit: 1 } });
+    const found = response > 0;
+    console.log(response);
+    console.log(found);
+    return found;    
+  } finally {
+    await client.close();
+  }
+  
+}
+
 app.post("/post/user", function(req, res) {
   console.log(`
     name: ${req.body.name} \n 
@@ -52,7 +68,6 @@ app.post("/post/user", function(req, res) {
 
 app.get("/user/create", function(req, res) {
   fs.readFile('user-create.html', 'utf8', (err, data) => {
-    console.log(data);
     if(err) {
       res.send('Error has occured: ', err);
     }
@@ -82,9 +97,16 @@ app.get("/user/login", function(req, res) {
   );  
 });
 
+app.post("/validate", function(req, res) {
+  const submission = {
+    username: req.body.username,
+    password: req.body.password,
+  };
 
-
-app.get("/validate", function(req, res) {
-  
+  result = validateUser(submission);
+  if(result) {
+    console.log("Validated");
+    //res.redirect("../");
+  }  
 
 });
