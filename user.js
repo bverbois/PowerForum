@@ -1,14 +1,15 @@
 const { MongoClient } = require("mongodb");
 
 require('dotenv').config();
-const uri = process.env.mongo_uri;
-const dbName = process.env.mongo_db;
+const uri = process.env.MONGO_URI;
+const dbName = process.env.MONGO_DB;
 const collectionName = "users";
 const noPassword = { projection: { password: 0 }};
 var fs = require("fs");
 const path = require('path');
 
 const express = require('express');
+const { errorCheck } = require("./errorCheck");
 const app = express();
 const port = 3000;
 app.listen(port);
@@ -18,12 +19,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const client = new MongoClient(uri);
 
-async function submitUser(submission) {
+
+
+async function submitUser(userToCreate) {
   try {
     const database = client.db(dbName);
     const collection = database.collection(collectionName);
 
-    const response = await collection.insertOne(submission);
+    const response = await collection.insertOne(userToCreate);
     console.log(response);
 
   } finally {
@@ -31,12 +34,12 @@ async function submitUser(submission) {
   }
 }
 
-async function validateUser(submission) {
+async function validateUser(userToValidate) {
   try {
     const database = client.db(dbName);
     const collection = database.collection(collectionName);
 
-    const response = await collection.countDocuments(submission, { projection: { limit: 1 } });
+    const response = await collection.countDocuments(userToValidate, { projection: { limit: 1 } });
     const found = response > 0;
     console.log(response);
     console.log(found);
@@ -47,7 +50,7 @@ async function validateUser(submission) {
   
 }
 
-app.post("/post/user", function(req, res) {
+app.post("/api/post/user", function(req, res) {
   console.log(`
     name: ${req.body.name} \n 
     username: ${req.body.username} \n 
@@ -55,55 +58,38 @@ app.post("/post/user", function(req, res) {
     `
   );
   
-  const submission = {
+  const userToCreate = {
     name: req.body.name,
     username: req.body.username,
     password: req.body.password,
   }; 
 
-  submitUser(submission);
+  submitUser(userToCreate);
 
   res.redirect("../user/login");
 });
 
 app.get("/user/create", function(req, res) {
-  fs.readFile('user-create.html', 'utf8', (err, data) => {
-    if(err) {
-      res.send('Error has occured: ', err);
+  res.sendFile(path.join(__dirname, 'user-create.html'), (err) => {
+      errorCheck(err);   
     }
-    res.send(data);
-  })  
+  );
 });
 
 app.get("/user/login", function(req, res) {
-  // fs.readFile('user-login.html', 'utf8', (err, data) => {
-  //   console.log(data);
-  //   if(err) {
-  //     res.send('Error has occured: ', err);
-  //   }
-  //   res.send(data);
-  // });
-
-  //sendFile seems better, don't need extra import for fs
   res.sendFile(path.join(__dirname, 'user-login.html'), (err) => {
-      if(err) {
-        return res.send('Error has occured: ', err);
-      } else {        
-
-        console.log("Success!");               
-
-      }      
+      errorCheck(err);   
     }
   );  
 });
 
-app.post("/validate", function(req, res) {
-  const submission = {
+app.post("/api/validate", function(req, res) {
+  const userToValidate = {
     username: req.body.username,
     password: req.body.password,
   };
 
-  result = validateUser(submission);
+  result = validateUser(userToValidate);
   if(result) {
     console.log("Validated");
     //res.redirect("../");
