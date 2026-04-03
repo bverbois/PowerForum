@@ -1,0 +1,25 @@
+form.create-form {
+    display: table;
+}
+
+div.create-form {
+    display: table-row;
+}
+
+h1 {
+    color: red;
+}
+
+label,
+input {
+    display: table-cell;
+    margin-bottom: 10px;
+}
+
+label {
+    padding-right: 10px;
+}
+
+body {
+    background-color: lightblue;
+}
