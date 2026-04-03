@@ -43,7 +43,7 @@ app.post("/api/post/topic", function (req, res) {
 });
 
 app.get("/topic/create", function (req, res) {
-  res.sendFile(path.join(__dirname, "topic-create.html"), (err) => {
+  res.sendFile(path.join(__dirname, "../views/topic-create.html"), (err) => {
     errorCheck(err);
   });
 });
@@ -53,7 +53,7 @@ app.get("/topics", function (req, res) {
   // const newContent = document.createTextNode("Testing");
   // mainBody.appendChild(newContent);
 
-  res.sendFile(path.join(__dirname, "topics-display.html"), (err) => {
+  res.sendFile(path.join(__dirname, "../views/topics-display.html"), (err) => {
     errorCheck(err);
   });
 });
