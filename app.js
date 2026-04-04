@@ -1,8 +1,9 @@
 import express from "express";
 import { errorCheck } from "./src/scripts/errorCheck.js";
 import path from "path";
-import { submitUser } from "./src/scripts/user.js";
-import { validateUser } from "./src/scripts/user.js";
+import { submitUser } from "./controllers/user.js";
+import { validateUser } from "./controllers/user.js";
+import { submitTopic } from "./controllers/topic.js";
 
 const app = express();
 const port = 3000;
@@ -20,32 +21,10 @@ app.use(express.static("src"));
 app.use(express.static("node_modules"));
 /***************** NOTE *****************/
 
-app.get("/user/create", function (req, res) {
-  res.sendFile(
-    path.join(import.meta.dirname, "./src/views/user-create.html"),
-    (err) => {
-      errorCheck(err);
-    },
-  );
-});
-/*
-Need to run submitUser() script inside user-login.html page and if the
-validation returns false, create an element that says 
-"Username or Password incorrect"
-*/
 app.post("/api/post/user", async function (req, res) {
   await submitUser(req.body);
 
   res.redirect("/user/login");
-});
-
-app.get("/user/login", function (req, res) {
-  res.sendFile(
-    path.join(import.meta.dirname, "./src/views/user-login.html"),
-    (err) => {
-      errorCheck(err);
-    },
-  );
 });
 
 app.post("/validate", async function (req, res) {
@@ -60,4 +39,46 @@ app.post("/validate", async function (req, res) {
 
   console.log("Validated");
   res.json({ validated: true });
+});
+
+app.get("/user/create", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/user-create.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
+});
+
+app.get("/user/login", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/user-login.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
+});
+
+app.post("/api/post/topic", async function (req, res) {
+  await submitTopic(req.body);
+
+  res.redirect("/topics");
+});
+
+app.get("/topic/create", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/topic-create.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
+});
+
+app.get("/topics", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/topics-display.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
 });

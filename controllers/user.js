@@ -5,7 +5,7 @@ dotenv.config();
 const uri = process.env.MONGO_URI;
 const dbName = process.env.MONGO_DB;
 const collectionName = "users";
-const noPassword = { projection: { password: 0 } };
+// const noPassword = { projection: { password: 0 } };
 
 export async function submitUser(user) {
   const userToCreate = {
@@ -13,6 +13,7 @@ export async function submitUser(user) {
     username: user.username,
     password: user.password,
   };
+
   const client = new MongoClient(uri);
   try {
     const database = client.db(dbName);

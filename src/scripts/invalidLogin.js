@@ -1,10 +1,4 @@
 const form = document.getElementById("form1");
-// const username = document.getElementById("username");
-// const password = document.getElementById("password");
-
-// const list = document.createElement("li");
-// list.textContent = "Testing";
-// form.appendChild(list);
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -26,5 +20,7 @@ form.addEventListener("submit", async (event) => {
     const usernameInput = document.getElementById("username");
     usernameInput.style.borderColor = "red";
     usernameInput.style.borderWidth = "2px";
+  } else if (result.validated) {
+    event.target.submit();
   }
 });
