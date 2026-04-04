@@ -1,7 +1,9 @@
 Project P1:
 Build a message exchanging service system (like a simplified Tweeter or message board for example) as follows. 
 
-A person may register an account with the service. The system maintains topics which are essentially message threads. 
+A person may register an account with the service. 
+
+The system maintains topics which are essentially message threads. 
 
 A user can subscribe to a topic or start a new topic (in which case the person is automatically subscribed to the new topic). 
 
