@@ -23,12 +23,11 @@ app.use(express.static("src"));
 app.use(express.static("node_modules"));
 /***************** NOTE *****************/
 
-// const database = Database.getInstance();
+const database = Database.getInstance();
 //Close the db connection on program exit
 process.on("SIGINT", async function () {
-  if (Database.hasInstance()) {
-    await Database.closeConnection();
-  }
+  await database.closeConnection();
+
   server.close(() => {
     console.log("Server closed...");
   });
@@ -87,7 +86,7 @@ app.get("/topic/create", function (req, res) {
   );
 });
 
-app.post("/topics", function (req, res) {
+app.get("/topics", function (req, res) {
   res.sendFile(
     path.join(import.meta.dirname, "./src/views/topics-display.html"),
     (err) => {
