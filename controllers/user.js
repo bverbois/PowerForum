@@ -1,11 +1,9 @@
 import { MongoClient } from "mongodb";
-import dotenv from "dotenv";
+import { Database } from "../connections/database.js";
 
-dotenv.config();
-const uri = process.env.MONGO_URI;
-const dbName = process.env.MONGO_DB;
 const collectionName = "users";
 // const noPassword = { projection: { password: 0 } };
+// const database = new Database();
 
 export async function submitUser(user) {
   const userToCreate = {
@@ -14,15 +12,10 @@ export async function submitUser(user) {
     password: user.password,
   };
 
-  const client = new MongoClient(uri);
-  try {
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
-    const response = await collection.insertOne(userToCreate);
-    console.log(response);
-  } finally {
-    await client.close();
-  }
+  const collection = database.collection(collectionName);
+  const response = await collection.insertOne(userToCreate);
+  console.log(response);
+  database.closeConnection();
 }
 
 export async function validateUser(user) {
