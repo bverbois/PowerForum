@@ -74,7 +74,7 @@ app.get("/topic/create", function (req, res) {
   );
 });
 
-app.get("/topics", function (req, res) {
+app.post("/topics", function (req, res) {
   res.sendFile(
     path.join(import.meta.dirname, "./src/views/topics-display.html"),
     (err) => {

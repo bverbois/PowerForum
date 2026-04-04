@@ -1,9 +1,9 @@
-const form = document.getElementById("form1");
+const form = document.forms["form1"];
 
-form.addEventListener("submit", async (event) => {
+async function check(event) {
   event.preventDefault();
 
-  const formData = new FormData(event.target);
+  const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
 
   const response = await fetch("/validate", {
@@ -16,11 +16,14 @@ form.addEventListener("submit", async (event) => {
 
   if (!result.validated) {
     const errElement = document.getElementById("error");
-    errElement.textContent = "Username or Password is incorrect.";
     const usernameInput = document.getElementById("username");
+
+    errElement.textContent = "Username or Password is incorrect.";
     usernameInput.style.borderColor = "red";
     usernameInput.style.borderWidth = "2px";
   } else if (result.validated) {
-    event.target.submit();
+    form.submit();
   }
-});
+}
+
+form.addEventListener("submit", check);

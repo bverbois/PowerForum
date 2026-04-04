@@ -2,7 +2,8 @@
   "dependencies": {
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
-    "mongodb": "^7.1.1"
+    "mongodb": "^7.1.1",
+    "vite": "^8.0.3"
   },
   "scripts": {
     "start": "node app.js"
