@@ -1,9 +1,7 @@
-import { MongoClient } from "mongodb";
 import { Database } from "../connections/database.js";
 
 const collectionName = "users";
 // const noPassword = { projection: { password: 0 } };
-// const database = new Database();
 
 export async function submitUser(user) {
   const userToCreate = {
@@ -12,6 +10,7 @@ export async function submitUser(user) {
     password: user.password,
   };
 
+  const database = Database.getInstance();
   const collection = database.collection(collectionName);
   const response = await collection.insertOne(userToCreate);
   console.log(response);
@@ -23,22 +22,15 @@ export async function validateUser(user) {
     username: user.username,
     password: user.password,
   };
-  const client = new MongoClient(uri);
-  try {
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
-    const response = await collection.countDocuments(userToValidate, {
-      projection: { limit: 1 },
-    });
-    const found = response > 0;
-    console.log(response);
-    console.log(found);
-    return found;
-  } finally {
-    await client.close();
-  }
-}
 
-// Now work on DOM stuff to add an element that says
-// Username or Password incorrect then focus on database
-// singleton
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const response = await collection.countDocuments(userToValidate, {
+    projection: { limit: 1 },
+  });
+
+  const found = response > 0;
+  console.log(response);
+  console.log(found);
+  return found;
+}

@@ -24,6 +24,14 @@ export class Database {
     return Database.instance;
   }
 
+  static hasInstance() {
+    if (Database.instance) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   connect() {
     const client = this.client;
 

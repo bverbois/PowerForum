@@ -23,10 +23,12 @@ app.use(express.static("src"));
 app.use(express.static("node_modules"));
 /***************** NOTE *****************/
 
-const database = Database.getInstance();
+// const database = Database.getInstance();
 //Close the db connection on program exit
 process.on("SIGINT", async function () {
-  await database.closeConnection();
+  if (Database.hasInstance()) {
+    await Database.closeConnection();
+  }
   server.close(() => {
     console.log("Server closed...");
   });
