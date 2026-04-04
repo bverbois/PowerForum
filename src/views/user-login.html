@@ -4,21 +4,23 @@
   <head>
     <!-- Styles aren't working, idk why yet -->
     <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <script defer type="module" src="../scripts/invalidLogin.js"></script>
   </head>
   <h1>User Login</h1>
   <body>
-    <form action="/validate" method="POST">
+    <form id="form1" action="/topics" method="POST">
       <!-- The action here will need to be the route which corresponds 
                                             to the app.post() function that posts a user-->
       <div>
         <label for="username">Username: </label>
-        <input type="text" name="username" value="" /> <br />
+        <input id="username" type="text" name="username" value="" /> <br />
       </div>
       <div>
         <label for="password">Password: </label>
-        <input type="text" name="password" value="" /><br />
+        <input id="password" type="text" name="password" value="" /><br />
       </div>
-      <input type="submit" name="submit" value="Submit" />
+      <input type="submit" name="submit" value="Submit" /><br />
+      <label id="error" style="color: red"></label>
     </form>
   </body>
 </html>

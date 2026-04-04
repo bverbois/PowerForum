@@ -12,6 +12,14 @@ console.log("Server started at http://localhost:" + port);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+/***************** NOTE *****************/
+/* this line is very important. it is what
+loads the script needed by the 
+HTML file (src="../scripts/script.js")*/
+app.use(express.static("src"));
+app.use(express.static("node_modules"));
+/***************** NOTE *****************/
+
 app.get("/user/create", function (req, res) {
   res.sendFile(
     path.join(import.meta.dirname, "./src/views/user-create.html"),
@@ -19,6 +27,16 @@ app.get("/user/create", function (req, res) {
       errorCheck(err);
     },
   );
+});
+/*
+Need to run submitUser() script inside user-login.html page and if the
+validation returns false, create an element that says 
+"Username or Password incorrect"
+*/
+app.post("/api/post/user", async function (req, res) {
+  await submitUser(req.body);
+
+  res.redirect("/user/login");
 });
 
 app.get("/user/login", function (req, res) {
@@ -30,18 +48,16 @@ app.get("/user/login", function (req, res) {
   );
 });
 
-app.post("/api/post/user", function (req, res) {
-  submitUser(req.body);
-
-  res.redirect("/user/login");
-});
-
 app.post("/validate", async function (req, res) {
   const result = await validateUser(req.body);
-  if (result) {
-    console.log("Validated");
-    //res.redirect("../");
-  } else {
+
+  if (!result) {
     console.log("Username/password is incorrect");
+    return res
+      .status(400)
+      .json({ validated: false, message: "Username/password is incorrect" });
   }
+
+  console.log("Validated");
+  res.json({ validated: true });
 });
