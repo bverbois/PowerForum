@@ -1,9 +1,5 @@
-import { MongoClient } from "mongodb";
-import dotenv from "dotenv";
+import { Database } from "../connections/database.js";
 
-dotenv.config();
-const uri = process.env.MONGO_URI;
-const dbName = process.env.MONGO_DB;
 const collectionName = "topics";
 
 export async function submitTopic(topic) {
@@ -12,13 +8,8 @@ export async function submitTopic(topic) {
     description: topic.description,
   };
 
-  const client = new MongoClient(uri);
-  try {
-    const database = client.db(dbName);
-    const collection = database.collection(collectionName);
-    const response = await collection.insertOne(topicToCreate);
-    console.log(response);
-  } finally {
-    await client.close();
-  }
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const response = await collection.insertOne(topicToCreate);
+  console.log(response);
 }

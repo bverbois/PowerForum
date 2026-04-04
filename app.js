@@ -4,11 +4,13 @@ import path from "path";
 import { submitUser } from "./controllers/user.js";
 import { validateUser } from "./controllers/user.js";
 import { submitTopic } from "./controllers/topic.js";
+import { Database } from "./connections/database.js";
 
 const app = express();
 const port = 3000;
-app.listen(port);
-console.log("Server started at http://localhost:" + port);
+const server = app.listen(port, () => {
+  console.log(`Server started at http://localhost:${port}`);
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -20,6 +22,17 @@ HTML file (src="../scripts/script.js")*/
 app.use(express.static("src"));
 app.use(express.static("node_modules"));
 /***************** NOTE *****************/
+
+// const database = Database.getInstance();
+//Close the db connection on program exit
+process.on("SIGINT", async function () {
+  if (Database.hasInstance()) {
+    await Database.closeConnection();
+  }
+  server.close(() => {
+    console.log("Server closed...");
+  });
+});
 
 app.post("/api/post/user", async function (req, res) {
   await submitUser(req.body);
