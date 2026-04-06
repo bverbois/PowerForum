@@ -22,7 +22,7 @@ async function check(event) {
     usernameInput.style.borderColor = "red";
     usernameInput.style.borderWidth = "2px";
   } else if (result.validated) {
-    form.submit();
+    window.location.href = "/topics";
   }
 }
 
