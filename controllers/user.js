@@ -14,7 +14,6 @@ export async function submitUser(user) {
   const collection = database.collection(collectionName);
   const response = await collection.insertOne(userToCreate);
   console.log(response);
-  database.closeConnection();
 }
 
 export async function validateUser(user) {
