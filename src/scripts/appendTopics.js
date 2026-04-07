@@ -1,14 +1,24 @@
-function appendTopics() {
-  const container = document.getElementById("main");
-  const options = ["Item1", "Item2", "Item3"];
+const response = await fetch("/api/topics");
+const data = await response.json();
+console.log(data);
 
-  options.forEach((item) => {
-    const list = document.createElement("li");
+const container = document.getElementById("main");
+let i = 0;
+data.body.forEach((item) => {
+  const title = document.createElement("a");
+  const description = document.createElement("p");
+  title.textContent = `Title: ${item.name}`;
+  title.href = "./topic/" + item._id;
+  description.textContent = `Description: ${item.description}`;
+  container.appendChild(title);
+  container.appendChild(description);
 
-    list.textContent = item;
+  i++;
+});
 
-    container.appendChild(list);
-  });
-}
-
-appendTopics();
+// const options = ["Item1", "Item2", "Item3"];
+// options.forEach((item) => {
+//   const list = document.createElement("li");
+//   list.textContent = item;
+//   container.appendChild(list);
+// });

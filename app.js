@@ -3,7 +3,7 @@ import { errorCheck } from "./src/scripts/errorCheck.js";
 import path from "path";
 import { submitUser } from "./controllers/user.js";
 import { validateUser } from "./controllers/user.js";
-import { submitTopic } from "./controllers/topic.js";
+import { getAllTopics, getTopic, submitTopic } from "./controllers/topic.js";
 import { Database } from "./connections/database.js";
 
 const app = express();
@@ -89,6 +89,32 @@ app.get("/topic/create", function (req, res) {
 app.get("/topics", function (req, res) {
   res.sendFile(
     path.join(import.meta.dirname, "./src/views/topics-display.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
+});
+
+app.get("/api/topics", async function (req, res) {
+  const response = await getAllTopics();
+
+  return res.status(200).json({ body: response });
+});
+
+app.get("/api/topic/:id", async function (req, res) {
+  const response = await getTopic(req.params["id"]);
+
+  if (response === null) {
+    console.log("404 Topic not found :(");
+    return res.status(404).json({ body: "404 Topic not found :(" });
+  }
+
+  return res.status(200).json({ body: response });
+});
+
+app.get("/topic/:id", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/topic-display.html"),
     (err) => {
       errorCheck(err);
     },
