@@ -1,7 +1,6 @@
 import { Database } from "../connections/database.js";
 
 const collectionName = "users";
-// const noPassword = { projection: { password: 0 } };
 
 export async function submitUser(user) {
   const userToCreate = {
@@ -16,7 +15,7 @@ export async function submitUser(user) {
   console.log(response);
 }
 
-export async function validateUser(user) {
+export async function authenticateUser(user) {
   const userToValidate = {
     username: user.username,
     password: user.password,
@@ -24,12 +23,11 @@ export async function validateUser(user) {
 
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
-  const response = await collection.countDocuments(userToValidate, {
-    projection: { limit: 1 },
+
+  const response = await collection.findOne(userToValidate, {
+    projection: { password: 0 },
   });
 
-  const found = response > 0;
   console.log(response);
-  console.log(found);
-  return found;
+  return response;
 }
