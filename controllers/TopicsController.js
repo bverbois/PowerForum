@@ -7,6 +7,7 @@ export async function submitTopic(topic) {
   const topicToCreate = {
     name: topic.name,
     description: topic.description,
+    messages: [],
   };
 
   const database = Database.getInstance();

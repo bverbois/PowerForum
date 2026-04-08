@@ -17,12 +17,20 @@
         <label for="password">Password: </label>
         <input id="password" type="text" name="password" value="" /><br />
       </div>
-      <input
-        type="submit"
-        id="submit-btn"
-        name="submit-btn"
-        value="Submit"
-      /><br />
+      <div>
+        <button type="submit" id="submit-btn" name="submit-btn" form="form1">
+          Submit
+        </button>
+        <button
+          onclick="window.location.href = '/user/create'"
+          id="register-button"
+          name="register-button"
+          type="button"
+        >
+          Register
+        </button>
+      </div>
+      <br />
       <label id="error" style="color: red"></label>
     </form>
   </body>

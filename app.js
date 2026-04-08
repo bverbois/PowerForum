@@ -1,9 +1,13 @@
 import express from "express";
 import { errorCheck } from "./src/scripts/errorCheck.js";
 import path from "path";
-import { submitUser } from "./controllers/user.js";
-import { validateUser } from "./controllers/user.js";
-import { getAllTopics, getTopic, submitTopic } from "./controllers/topic.js";
+import { submitUser } from "./controllers/UsersController.js";
+import { validateUser } from "./controllers/UsersController.js";
+import {
+  getAllTopics,
+  getTopic,
+  submitTopic,
+} from "./controllers/TopicsController.js";
 import { Database } from "./connections/database.js";
 
 const app = express();
@@ -31,6 +35,11 @@ process.on("SIGINT", async function () {
   server.close(() => {
     console.log("Server closed...");
   });
+});
+
+//This could be a landing page eventually
+app.get("/", function (req, res) {
+  res.redirect("/user/login");
 });
 
 app.post("/api/post/user", async function (req, res) {
