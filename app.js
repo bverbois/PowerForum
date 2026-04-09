@@ -12,6 +12,7 @@ import { Database } from "./connections/database.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import dotenv from "dotenv";
+import { submitMessage } from "./controllers/MessagesController.js";
 
 dotenv.config();
 const app = express();
@@ -86,8 +87,7 @@ app.post("/api/authenticate", async function (req, res) {
       message: "Username/password is incorrect",
     });
   }
-  //s%3AUmvmpuvFoudqk00PEA-qvL6gRxqa4UOG.qS%2F0mlDwIZNJbj24i0Hl4mknnyxPRr9PwmNdXlL3JqY
-  //s%3ASuw1yrmnX4u69Z0lBMeN1ClCLRM4xdSI.btOBFU%2Bw4HRuqprEtLUcKo0fjXJIGZQn%2FT3OWyddlGY
+
   res.cookie("auth", "true", { maxAge: 30 * 60 * 1000 }); //30minutes expiration
 
   req.session.user = {
@@ -179,5 +179,13 @@ app.get("/topic/:id", function (req, res) {
         errorCheck(err);
       },
     );
+  }
+});
+
+app.post("/api/post/message", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await submitMessage(req.body, req.session.user.id);
+    console.log(response);
+    return res.status(201).json({ body: response });
   }
 });
