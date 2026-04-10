@@ -1,8 +1,11 @@
 import express from "express";
 import { errorCheck } from "./src/scripts/errorCheck.js";
 import path from "path";
-import { submitUser } from "./controllers/UsersController.js";
-import { authenticateUser } from "./controllers/UsersController.js";
+import {
+  getUsersByMessages,
+  submitUser,
+  authenticateUser,
+} from "./controllers/UsersController.js";
 import {
   getAllTopics,
   getTopic,
@@ -12,6 +15,7 @@ import { Database } from "./connections/database.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import dotenv from "dotenv";
+import { submitMessage } from "./controllers/MessagesController.js";
 
 dotenv.config();
 const app = express();
@@ -86,8 +90,7 @@ app.post("/api/authenticate", async function (req, res) {
       message: "Username/password is incorrect",
     });
   }
-  //s%3AUmvmpuvFoudqk00PEA-qvL6gRxqa4UOG.qS%2F0mlDwIZNJbj24i0Hl4mknnyxPRr9PwmNdXlL3JqY
-  //s%3ASuw1yrmnX4u69Z0lBMeN1ClCLRM4xdSI.btOBFU%2Bw4HRuqprEtLUcKo0fjXJIGZQn%2FT3OWyddlGY
+
   res.cookie("auth", "true", { maxAge: 30 * 60 * 1000 }); //30minutes expiration
 
   req.session.user = {
@@ -161,6 +164,17 @@ app.get("/api/topics", async function (req, res) {
 app.get("/api/topic/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await getTopic(req.params["id"]);
+    // const users = await getUsersByMessages(response.messages);
+    // console.log("These are the users:\n");
+    // users.map((user) => {
+    //   console.log(user);
+    // });
+
+    // response.messages.forEach((msg) => {
+    //   let user = users.find((u) => u._id.toString() === msg.userId?.toString());
+    //   msg.username = user.username;
+    //   console.log(msg);
+    // });
 
     if (response === null) {
       console.log("404 Topic not found :(");
@@ -171,6 +185,18 @@ app.get("/api/topic/:id", async function (req, res) {
   }
 });
 
+// USERS
+// [
+//   {
+//     _id: new ObjectId('69d0549d9d341ee31cc2fcad'),
+//     username: 'Username'
+//   },
+//   {
+//     _id: new ObjectId('69d8828f923dbf2781cc8b14'),
+//     username: 'NewUsername'
+//   }
+// ]
+
 app.get("/topic/:id", function (req, res) {
   if (checkCookie(req, res)) {
     res.sendFile(
@@ -179,5 +205,13 @@ app.get("/topic/:id", function (req, res) {
         errorCheck(err);
       },
     );
+  }
+});
+
+app.post("/api/post/message", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await submitMessage(req.body, req.session.user);
+    console.log(response);
+    return res.status(201).json({ body: response });
   }
 });
