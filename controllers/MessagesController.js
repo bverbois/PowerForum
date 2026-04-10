@@ -30,15 +30,18 @@ const usersCollection = database.collection("users");
 //   (msg) => msg._id.toString() === "69d6e4fa13ce9437dd55e8c1",
 // );
 
-export async function submitMessage(request, userId) {
-  const userOid = new ObjectId(userId);
+export async function submitMessage(request, user) {
+  const userOid = new ObjectId(user.id);
+  const username = user.username;
   const messageId = new ObjectId();
 
   const messageToCreate = {
     _id: messageId,
     body: request["message-body"],
     userId: userOid,
+    username: username,
   };
+
   console.log(messageToCreate);
 
   const topicId = new ObjectId(request.topic_id);
@@ -50,8 +53,18 @@ export async function submitMessage(request, userId) {
 
   await usersCollection.updateOne(
     { _id: userOid },
-    { $push: { messages: messageId } },
+    { $push: { messages: { _id: messageId } } },
   );
+
+  // const user = await usersCollection.findOneAndUpdate(
+  //   { _id: userOid },
+  //   { $push: { messages: messageId } },
+  //   { returnNewDocument: true },
+  // );
+
+  // messageToCreate.username = user.username;
+
+  
 
   console.log(response);
   return messageToCreate;

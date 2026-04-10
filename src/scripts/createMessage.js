@@ -8,12 +8,13 @@ async function submitWatch(event) {
   event.preventDefault();
   const paths = window.location.pathname.split("/");
   const topicId = paths[paths.length - 1];
-
+  var hasError = false;
   const formData = new FormData(messageForm);
 
   if (formData.get("message-body") === "") {
     error.style.color = "red";
     error.textContent = "Your can't submit an empty text box!";
+    hasError = true;
     return messageForm.append(error);
   }
   formData.append("topic_id", topicId);
@@ -26,12 +27,19 @@ async function submitWatch(event) {
   });
   const result = await response.json();
 
+  const container = document.createElement("div");
   const content = document.createElement("p");
+  const username = document.createElement("p");
+
   content.id = result.body._id;
   content.textContent = result.body.body;
+  username.id = result.body.userId;
+  username.textContent = result.body.username;
   messageBody.value = "";
-  messageForm.removeChild(error);
-  messages.appendChild(content);
+  hasError ?? messageForm.removeChild(error);
+  container.appendChild(username);
+  container.appendChild(content);
+  messages.appendChild(container);
 }
 
 messageForm.addEventListener("submit", submitWatch);

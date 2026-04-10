@@ -164,16 +164,17 @@ app.get("/api/topics", async function (req, res) {
 app.get("/api/topic/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await getTopic(req.params["id"]);
-    const users = await getUsersByMessages(response.messages);
-    console.log(users);
-    //Not working just yet, for some reason the user is undefined
-    //and thus the username for the msg is undefined as well.
-    response.messages.forEach((msg) => {
-      let user = users.find(({ _id }) => _id === msg.user_id);
-      console.log(user);
-      msg.username = user?.username;
-      console.log(msg);
-    });
+    // const users = await getUsersByMessages(response.messages);
+    // console.log("These are the users:\n");
+    // users.map((user) => {
+    //   console.log(user);
+    // });
+
+    // response.messages.forEach((msg) => {
+    //   let user = users.find((u) => u._id.toString() === msg.userId?.toString());
+    //   msg.username = user.username;
+    //   console.log(msg);
+    // });
 
     if (response === null) {
       console.log("404 Topic not found :(");
@@ -209,7 +210,7 @@ app.get("/topic/:id", function (req, res) {
 
 app.post("/api/post/message", async function (req, res) {
   if (checkCookie(req, res)) {
-    const response = await submitMessage(req.body, req.session.user.id);
+    const response = await submitMessage(req.body, req.session.user);
     console.log(response);
     return res.status(201).json({ body: response });
   }
