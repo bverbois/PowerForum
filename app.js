@@ -1,8 +1,11 @@
 import express from "express";
 import { errorCheck } from "./src/scripts/errorCheck.js";
 import path from "path";
-import { submitUser } from "./controllers/UsersController.js";
-import { authenticateUser } from "./controllers/UsersController.js";
+import {
+  getUsersByMessages,
+  submitUser,
+  authenticateUser,
+} from "./controllers/UsersController.js";
 import {
   getAllTopics,
   getTopic,
@@ -161,6 +164,16 @@ app.get("/api/topics", async function (req, res) {
 app.get("/api/topic/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await getTopic(req.params["id"]);
+    const users = await getUsersByMessages(response.messages);
+    console.log(users);
+    //Not working just yet, for some reason the user is undefined
+    //and thus the username for the msg is undefined as well.
+    response.messages.forEach((msg) => {
+      let user = users.find(({ _id }) => _id === msg.user_id);
+      console.log(user);
+      msg.username = user?.username;
+      console.log(msg);
+    });
 
     if (response === null) {
       console.log("404 Topic not found :(");
@@ -170,6 +183,18 @@ app.get("/api/topic/:id", async function (req, res) {
     return res.status(200).json({ body: response });
   }
 });
+
+// USERS
+// [
+//   {
+//     _id: new ObjectId('69d0549d9d341ee31cc2fcad'),
+//     username: 'Username'
+//   },
+//   {
+//     _id: new ObjectId('69d8828f923dbf2781cc8b14'),
+//     username: 'NewUsername'
+//   }
+// ]
 
 app.get("/topic/:id", function (req, res) {
   if (checkCookie(req, res)) {

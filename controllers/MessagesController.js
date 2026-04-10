@@ -3,7 +3,8 @@ import { MongoClient, ObjectId } from "mongodb";
 
 const collectionName = "topics";
 const database = Database.getInstance();
-const collection = database.collection(collectionName);
+const topicsCollection = database.collection(collectionName);
+const usersCollection = database.collection("users");
 
 // const topicOid = new ObjectId(topicId);
 
@@ -30,18 +31,26 @@ const collection = database.collection(collectionName);
 // );
 
 export async function submitMessage(request, userId) {
+  const userOid = new ObjectId(userId);
+  const messageId = new ObjectId();
+
   const messageToCreate = {
-    _id: new ObjectId(),
+    _id: messageId,
     body: request["message-body"],
-    user_id: new ObjectId(userId),
+    userId: userOid,
   };
   console.log(messageToCreate);
 
   const topicId = new ObjectId(request.topic_id);
 
-  const response = await collection.updateOne(
+  const response = await topicsCollection.updateOne(
     { _id: topicId },
     { $push: { messages: messageToCreate } },
+  );
+
+  await usersCollection.updateOne(
+    { _id: userOid },
+    { $push: { messages: messageId } },
   );
 
   console.log(response);

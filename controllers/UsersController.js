@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { Database } from "../connections/database.js";
 
 const collectionName = "users";
@@ -7,6 +8,7 @@ export async function submitUser(user) {
     name: user.name,
     username: user.username,
     password: user.password,
+    messageIds: [],
   };
 
   const database = Database.getInstance();
@@ -31,3 +33,41 @@ export async function authenticateUser(user) {
   console.log(response);
   return response;
 }
+
+export async function getTopic(topicId) {
+  const oid = new ObjectId(topicId);
+
+  const database = Database.getInstance();
+  const collection = database.collection("topics");
+  const response = await collection.findOne({ _id: oid });
+  console.log(response);
+
+  return response;
+}
+
+export async function getUsersByMessages(messages) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  var messageIds = [];
+  var users = [];
+
+  messages.forEach((msg) => {
+    messageIds.push(msg._id);
+  });
+
+  const results = await collection
+    .find({ "messages._id": { $in: messageIds } })
+    .project({
+      username: 1,
+    });
+  // .project({
+  //   messages: { $elemMatch: { _id: { $in: messageIds } } },
+  //   username: 1,
+  // });
+  for await (let user of results) {
+    users.push(user);
+  }
+
+  return users;
+}
+
