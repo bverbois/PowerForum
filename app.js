@@ -76,38 +76,6 @@ app.get("/", function (req, res) {
   }
 });
 
-app.post("/api/post/user", async function (req, res) {
-  await submitUser(req.body);
-
-  res.redirect("/user/login");
-});
-
-/*After authentication, route to a new page, "/user/:username" 
-which displays the user's information along with their
-subscribed topics alongside the latest two messages (this is
-gotten from the getTopicsWithLatest() function in
-TopicsController.js)*/
-
-app.get("/api/get/topicsWithLatest", async function (req, res) {
-  const topics = getTopicsWithLatest(result.topics);
-});
-
-app.get("/api/get/user", async function (req, res) {
-  console.log(req.session.user.id);
-  const result = await getUserWithFavorites(req.session.user.id);
-  const topics = await getTopicsWithLatest(result.topics);
-  result.topics = topics;
-  console.log("Result: ");
-  console.log(result);
-  console.log("Topics: ");
-  result.topics.map((topic) => {
-    console.log(topic);
-  });
-
-  return res.status(200).json({ body: result });
-  //console.log(topics);
-});
-
 app.post("/api/authenticate", async function (req, res) {
   const result = await authenticateUser(req.body);
 
@@ -131,6 +99,34 @@ app.post("/api/authenticate", async function (req, res) {
   res.json({ authenticated: true });
 });
 
+app.post("/api/post/user", async function (req, res) {
+  await submitUser(req.body);
+
+  res.redirect("/user/login");
+});
+
+/*After authentication, route to a new page, "/user/:username" 
+which displays the user's information along with their
+subscribed topics alongside the latest two messages (this is
+gotten from the getTopicsWithLatest() function in
+TopicsController.js)*/
+
+app.get("/api/get/user", async function (req, res) {
+  console.log(req.session.user.id);
+  const result = await getUserWithFavorites(req.session.user.id);
+  const topics = await getTopicsWithLatest(result.topics);
+  result.topics = topics;
+  console.log("Result: ");
+  console.log(result);
+  console.log("Topics: ");
+  result.topics.map((topic) => {
+    console.log(topic);
+  });
+
+  return res.status(200).json({ body: result });
+  //console.log(topics);
+});
+
 app.get("/user/create", function (req, res) {
   res.sendFile(
     path.join(import.meta.dirname, "./src/views/user-create.html"),
@@ -149,36 +145,27 @@ app.get("/user/login", function (req, res) {
   );
 });
 
+app.get("/user", function (req, res) {
+  if (checkCookie(req, res)) {
+    res.sendFile(
+      path.join(import.meta.dirname, "./src/views/user-display.html"),
+      (err) => {
+        errorCheck(err);
+      },
+    );
+  }
+});
+
+app.get("/api/get/topicsWithLatest", async function (req, res) {
+  const topics = getTopicsWithLatest(result.topics);
+});
+
 app.post("/api/post/topic", async function (req, res) {
   if (checkCookie(req, res)) {
     await submitTopic(req.body);
 
     res.redirect("/topics");
   }
-});
-
-app.get("/topic/create", function (req, res) {
-  if (checkCookie(req, res)) {
-    res.sendFile(
-      path.join(import.meta.dirname, "./src/views/topic-create.html"),
-      (err) => {
-        errorCheck(err);
-      },
-    );
-  }
-  console.log(req.session.user);
-});
-
-app.get("/topics", function (req, res) {
-  if (checkCookie(req, res)) {
-    res.sendFile(
-      path.join(import.meta.dirname, "./src/views/topics-display.html"),
-      (err) => {
-        errorCheck(err);
-      },
-    );
-  }
-  console.log(req.session.user);
 });
 
 app.get("/api/topics", async function (req, res) {
@@ -213,17 +200,29 @@ app.get("/api/topic/:id", async function (req, res) {
   }
 });
 
-// USERS
-// [
-//   {
-//     _id: new ObjectId('69d0549d9d341ee31cc2fcad'),
-//     username: 'Username'
-//   },
-//   {
-//     _id: new ObjectId('69d8828f923dbf2781cc8b14'),
-//     username: 'NewUsername'
-//   }
-// ]
+app.get("/topic/create", function (req, res) {
+  if (checkCookie(req, res)) {
+    res.sendFile(
+      path.join(import.meta.dirname, "./src/views/topic-create.html"),
+      (err) => {
+        errorCheck(err);
+      },
+    );
+  }
+  console.log(req.session.user);
+});
+
+app.get("/topics", function (req, res) {
+  if (checkCookie(req, res)) {
+    res.sendFile(
+      path.join(import.meta.dirname, "./src/views/topics-display.html"),
+      (err) => {
+        errorCheck(err);
+      },
+    );
+  }
+  console.log(req.session.user);
+});
 
 app.get("/topic/:id", function (req, res) {
   if (checkCookie(req, res)) {
