@@ -32,7 +32,7 @@ export async function authenticateUser(user) {
     projection: { password: 0 },
   });
 
-  getTopicsWithLatest(response.topics);
+  //getTopicsWithLatest(response.topics);
 
   //console.log(topics);
   return response;
@@ -45,13 +45,11 @@ export async function getUserWithFavorites(id) {
   const response = await collection.findOne(
     { _id: oid },
     {
-      projection: { password: 0 },
+      projection: { password: 0, messages: 0 },
     },
   );
 
-  getTopicsWithLatest(topics);
-
-  //console.log(topics);
+  //console.log(response);
   return response;
 }
 

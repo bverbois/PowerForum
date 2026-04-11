@@ -49,9 +49,9 @@ export async function getTopicsWithLatest(topics) {
     })
     .toArray();
 
-  response.forEach((topic) => {
-    console.log(topic);
-  });
+  // response.forEach((topic) => {
+  //   console.log(topic);
+  // });
 
   return response;
 }
