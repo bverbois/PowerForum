@@ -5,6 +5,7 @@ import {
   getUsersByMessages,
   submitUser,
   authenticateUser,
+  getUserWithFavorites,
 } from "./controllers/UsersController.js";
 import {
   getAllTopics,
@@ -79,6 +80,18 @@ app.post("/api/post/user", async function (req, res) {
 
   res.redirect("/user/login");
 });
+
+/*After authentication, route to a new page, "/user/:username" 
+which displays the user's information along with their
+subscribed topics alongside the latest two messages (this is
+gotten from the getTopicsWithLatest() function in
+TopicsController.js)*/
+
+app.get("/api/topicsWithLatest", async function (req, res) {
+  const result = await getUserWithFavorites(req.body._id);
+
+  
+})
 
 app.post("/api/authenticate", async function (req, res) {
   const result = await authenticateUser(req.body);

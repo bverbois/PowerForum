@@ -28,6 +28,34 @@ export async function getAllTopics() {
   return response;
 }
 
+export async function getTopicsWithLatest(topics) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+
+  let topicIds = [];
+
+  topics.forEach((topic) => {
+    topicIds.push(topic._id);
+    console.log(topic._id);
+  });
+
+  const response = await database
+    .collection("topics")
+    .find({ _id: { $in: topicIds } })
+    .project({
+      name: 1,
+      description: 1,
+      latestTwo: { $slice: ["$messages", -2] },
+    })
+    .toArray();
+
+  response.forEach((topic) => {
+    console.log(topic);
+  });
+
+  return response;
+}
+
 export async function getTopic(topicId) {
   const oid = new ObjectId(topicId);
 

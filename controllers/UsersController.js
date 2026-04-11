@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Database } from "../connections/database.js";
+import { getTopicsWithLatest } from "./TopicsController.js";
 
 const collectionName = "users";
 
@@ -8,7 +9,8 @@ export async function submitUser(user) {
     name: user.name,
     username: user.username,
     password: user.password,
-    messageIds: [],
+    messages: [],
+    topics: [],
   };
 
   const database = Database.getInstance();
@@ -30,18 +32,26 @@ export async function authenticateUser(user) {
     projection: { password: 0 },
   });
 
-  console.log(response);
+  getTopicsWithLatest(response.topics);
+
+  //console.log(topics);
   return response;
 }
 
-export async function getTopic(topicId) {
-  const oid = new ObjectId(topicId);
-
+export async function getUserWithFavorites(id) {
   const database = Database.getInstance();
-  const collection = database.collection("topics");
-  const response = await collection.findOne({ _id: oid });
-  console.log(response);
+  const collection = database.collection(collectionName);
+  const oid = new ObjectId(id);
+  const response = await collection.findOne(
+    { _id: oid },
+    {
+      projection: { password: 0 },
+    },
+  );
 
+  getTopicsWithLatest(topics);
+
+  //console.log(topics);
   return response;
 }
 
@@ -70,4 +80,3 @@ export async function getUsersByMessages(messages) {
 
   return users;
 }
-
