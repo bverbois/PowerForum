@@ -13,11 +13,16 @@ if (data.body.topics.length > 0) {
 
     const name = document.createElement("a");
     const description = document.createElement("div");
+    const unsubscribe = document.createElement("button");
     var messages = document.createElement("div");
 
     name.textContent = `${topic.name}`;
     name.href = `./topic/${topic._id}`;
-    name.id = topic._id;
+    unsubscribe.id = topic._id;
+    unsubscribe.addEventListener((event) => {
+      //fetch("/api/delete/favorite");
+      //remove the favorite from the dom
+    });
     description.textContent = topic.description;
 
     if (topic.latestTwo?.length > 0) {
@@ -32,6 +37,7 @@ if (data.body.topics.length > 0) {
     }
 
     container.appendChild(name);
+    container.appendChild(unsubscribe);
     container.appendChild(description);
     container.appendChild(messages);
   });

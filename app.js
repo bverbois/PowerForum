@@ -72,7 +72,7 @@ process.on("SIGINT", async function () {
 //This could be a landing page eventually
 app.get("/", function (req, res) {
   if (checkCookie(req, res)) {
-    res.redirect("/topics");
+    res.redirect("/user");
   }
 });
 
