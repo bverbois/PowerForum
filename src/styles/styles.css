@@ -1,0 +1,56 @@
+/* form.create-form {
+  display: table;
+}
+
+div.create-form {
+  display: table-row;
+} */
+
+h1,
+div {
+  color: rgb(255, 255, 255);
+  font-family: sans-serif;
+}
+
+button.subscribe {
+  background-image: url(./icons/star-regular-full-white.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 20px;
+  height: 20px;
+}
+
+button.unsubscribe {
+  background-image: url(./icons/star-solid-full-white.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 20px;
+  height: 20px;
+}
+
+a {
+  color: rgb(255, 255, 255);
+  font-family: sans-serif;
+  font-size: 18px;
+  padding: 6px;
+}
+
+label,
+input {
+  display: table-cell;
+  margin-bottom: 10px;
+}
+
+label {
+  padding-right: 10px;
+}
+
+body {
+  background-color: rgba(0, 16, 26);
+}

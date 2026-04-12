@@ -91,3 +91,16 @@ export async function removeSubscription(userId, topicId) {
 
   console.log(result);
 }
+
+export async function addSubscription(userId, topicId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const userOid = new ObjectId(userId);
+  const topicOid = new ObjectId(topicId);
+  const result = await collection.updateOne(
+    { _id: userOid },
+    { $push: { topics: { _id: topicOid } } },
+  );
+
+  console.log(result);
+}

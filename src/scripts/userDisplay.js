@@ -22,11 +22,9 @@ if (data.body.topics.length > 0) {
     name.href = `./topic/${topic._id}`;
     description.textContent = topic.description;
     unsubscribe.textContent = "Unsubscribe";
+    
     unsubscribe.addEventListener("click", (event) => {
-      //fetch("/api/update/favorite/:id"); //Where :id is event.target.id?
-      //remove the favorite from the dom
-
-      fetch(`/api/update/subscription/${topicElement.id}`);
+      fetch(`/api/delete/subscription/${topicElement.id}`);
       container.removeChild(topicElement);
     });
 

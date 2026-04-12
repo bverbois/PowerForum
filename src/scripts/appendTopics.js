@@ -2,23 +2,39 @@ const response = await fetch("/api/topics");
 const data = await response.json();
 console.log(data);
 
-const container = document.getElementById("main");
-let i = 0;
-data.body.forEach((item) => {
-  const title = document.createElement("a");
-  const description = document.createElement("p");
-  title.textContent = `Title: ${item.name}`;
-  title.href = "./topic/" + item._id;
-  description.textContent = `Description: ${item.description}`;
-  container.appendChild(title);
-  container.appendChild(description);
+const container = document.getElementById("body");
 
-  i++;
+data.body.forEach((topic) => {
+  const topicElement = document.createElement("div");
+  const header = document.createElement("div");
+  const title = document.createElement("a");
+  const description = document.createElement("div");
+  const subscription = document.createElement("button");
+
+  subscription.className = "subscribe";
+  topicElement.id = topic._id;
+  title.textContent = `Title: ${topic.name}`;
+  title.href = `./topic/${topic._id}`;
+  description.textContent = `Description: ${topic.description}`;
+
+  subscription.addEventListener("click", async (event) => {
+    await fetch(`/api/post/subscription/${topicElement.id}`);
+    
+    container.removeChild(topicElement);
+  });
+
+  //subscribe.appendChild(subIcon);
+  header.appendChild(subscription);
+  header.appendChild(title);
+  topicElement.appendChild(header);
+  topicElement.appendChild(description);
+  container.appendChild(topicElement);
 });
 
-// const options = ["Item1", "Item2", "Item3"];
-// options.forEach((item) => {
-//   const list = document.createElement("li");
-//   list.textContent = item;
-//   container.appendChild(list);
-// });
+function subscribeEvent() {
+
+}
+
+/*If a user subscribes to a topic, need to switch to the unsubscribe
+className and change fetch event listener function to be 
+fetch(`/api/delete/subscription/${topicElement.id}`)*/
