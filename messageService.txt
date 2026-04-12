@@ -7,8 +7,6 @@ A user can subscribe to a topic
 
 A user is automatically subscribed to a new topic upon create 
 
-Upon login, a user should see the 2 most recent messages posted in each of the topics in which the user has subscribed. 
-
 In that entry page, there should also be a link to show topics available for subscription and there should be an "unsubscribe" 
     button next to each of the subscribed topics. 
     

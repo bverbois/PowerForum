@@ -6,6 +6,7 @@ import {
   submitUser,
   authenticateUser,
   getUserWithFavorites,
+  removeSubscription,
 } from "./controllers/UsersController.js";
 import {
   getAllTopics,
@@ -125,6 +126,16 @@ app.get("/api/get/user", async function (req, res) {
 
   return res.status(200).json({ body: result });
   //console.log(topics);
+});
+
+app.get("/api/update/subscription/:id", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await removeSubscription(
+      req.session.user.id,
+      req.params["id"],
+    );
+    return res.status(200).json({ body: response });
+  }
 });
 
 app.get("/user/create", function (req, res) {

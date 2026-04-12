@@ -78,3 +78,16 @@ export async function getUsersByMessages(messages) {
 
   return users;
 }
+
+export async function removeSubscription(userId, topicId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const userOid = new ObjectId(userId);
+  const topicOid = new ObjectId(topicId);
+  const result = await collection.updateOne(
+    { _id: userOid },
+    { $pull: { topics: { _id: topicOid } } },
+  );
+
+  console.log(result);
+}

@@ -11,19 +11,24 @@ if (data.body.topics.length > 0) {
   data.body.topics.forEach((topic) => {
     console.log("Topic: " + topic);
 
+    const topicElement = document.createElement("div");
     const name = document.createElement("a");
     const description = document.createElement("div");
     const unsubscribe = document.createElement("button");
     var messages = document.createElement("div");
 
+    topicElement.id = topic._id;
     name.textContent = `${topic.name}`;
     name.href = `./topic/${topic._id}`;
-    unsubscribe.id = topic._id;
-    unsubscribe.addEventListener((event) => {
-      //fetch("/api/delete/favorite");
-      //remove the favorite from the dom
-    });
     description.textContent = topic.description;
+    unsubscribe.textContent = "Unsubscribe";
+    unsubscribe.addEventListener("click", (event) => {
+      //fetch("/api/update/favorite/:id"); //Where :id is event.target.id?
+      //remove the favorite from the dom
+
+      fetch(`/api/update/subscription/${topicElement.id}`);
+      container.removeChild(topicElement);
+    });
 
     if (topic.latestTwo?.length > 0) {
       topic.latestTwo.forEach((msg) => {
@@ -36,10 +41,11 @@ if (data.body.topics.length > 0) {
       });
     }
 
-    container.appendChild(name);
-    container.appendChild(unsubscribe);
-    container.appendChild(description);
-    container.appendChild(messages);
+    topicElement.appendChild(name);
+    topicElement.appendChild(description);
+    topicElement.appendChild(messages);
+    topicElement.appendChild(unsubscribe);
+    container.appendChild(topicElement);
   });
   topics.appendChild(container);
 }
