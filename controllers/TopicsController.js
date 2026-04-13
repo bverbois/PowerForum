@@ -13,7 +13,7 @@ export async function submitTopic(topic) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
   const response = await collection.insertOne(topicToCreate);
-  console.log(response);
+  return response;
 }
 
 export async function getAllTopics() {

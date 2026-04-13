@@ -38,7 +38,7 @@ export async function authenticateUser(user) {
   return response;
 }
 
-export async function getUserWithFavorites(id) {
+export async function getUserWithSubscriptions(id) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
   const oid = new ObjectId(id);
@@ -46,6 +46,21 @@ export async function getUserWithFavorites(id) {
     { _id: oid },
     {
       projection: { password: 0, messages: 0 },
+    },
+  );
+
+  //console.log(response);
+  return response;
+}
+
+export async function getSubscriptions(id) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const oid = new ObjectId(id);
+  const response = await collection.findOne(
+    { _id: oid },
+    {
+      projection: { password: 0, messages: 0, _id: 0, name: 0, username: 0 },
     },
   );
 

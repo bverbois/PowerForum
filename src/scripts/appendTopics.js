@@ -1,8 +1,20 @@
 const response = await fetch("/api/topics");
+const subscriptions = await fetch("/api/get/subscriptions");
+
 const data = await response.json();
-console.log(data);
+const subscriptionData = await subscriptions.json();
+
+let subIds = [];
+subscriptionData.body.topics.forEach((sub) => {
+  subIds.push(sub._id);
+});
 
 const container = document.getElementById("body");
+const subscribedTopics = document.createElement("div");
+const unsubscribedTopics = document.createElement("div");
+
+subscribedTopics.name = "subscribed-topics";
+unsubscribedTopics.name = "unsubscribed-topics";
 
 data.body.forEach((topic) => {
   const topicElement = document.createElement("div");
@@ -11,29 +23,50 @@ data.body.forEach((topic) => {
   const description = document.createElement("div");
   const subscription = document.createElement("button");
 
-  subscription.className = "subscribe";
+  if (subIds.includes(topic._id)) {
+    subscription.name = "subscribed";
+    subscription.className = "unsubscribe";
+    subscribedTopics.appendChild(topicElement);
+  } else {
+    subscription.name = "unsubscribed";
+    subscription.className = "subscribe";
+    unsubscribedTopics.appendChild(topicElement);
+  }
+
   topicElement.id = topic._id;
-  title.textContent = `Title: ${topic.name}`;
+  title.textContent = topic.name;
   title.href = `./topic/${topic._id}`;
-  description.textContent = `Description: ${topic.description}`;
+  description.textContent = topic.description;
 
   subscription.addEventListener("click", async (event) => {
-    await fetch(`/api/post/subscription/${topicElement.id}`);
-    
-    container.removeChild(topicElement);
+    if (subscription.name === "unsubscribed") {
+      await fetch(`/api/post/subscription/${topicElement.id}`);
+      subscription.className = "unsubscribe";
+      subscription.name = "subscribed";
+
+      let temp = unsubscribedTopics.removeChild(topicElement);
+      subscribedTopics.appendChild(temp);
+      return;
+    } else if (subscription.name === "subscribed") {
+      await fetch(`/api/delete/subscription/${topicElement.id}`);
+      subscription.className = "subscribe";
+      subscription.name = "unsubscribed";
+
+      let temp = subscribedTopics.removeChild(topicElement);
+      unsubscribedTopics.appendChild(temp);
+      return;
+    } else {
+      console.log("something bad happened rip");
+    }
   });
 
-  //subscribe.appendChild(subIcon);
   header.appendChild(subscription);
   header.appendChild(title);
   topicElement.appendChild(header);
   topicElement.appendChild(description);
-  container.appendChild(topicElement);
+  container.appendChild(subscribedTopics);
+  container.appendChild(unsubscribedTopics);
 });
-
-function subscribeEvent() {
-
-}
 
 /*If a user subscribes to a topic, need to switch to the unsubscribe
 className and change fetch event listener function to be 

@@ -5,9 +5,10 @@ import {
   getUsersByMessages,
   submitUser,
   authenticateUser,
-  getUserWithFavorites,
   removeSubscription,
   addSubscription,
+  getUserWithSubscriptions,
+  getSubscriptions,
 } from "./controllers/UsersController.js";
 import {
   getAllTopics,
@@ -115,7 +116,7 @@ TopicsController.js)*/
 
 app.get("/api/get/user", async function (req, res) {
   console.log(req.session.user.id);
-  const result = await getUserWithFavorites(req.session.user.id);
+  const result = await getUserWithSubscriptions(req.session.user.id);
   const topics = await getTopicsWithLatest(result.topics);
   result.topics = topics;
   console.log("Result: ");
@@ -145,6 +146,14 @@ app.get("/api/post/subscription/:id", async function (req, res) {
       req.session.user.id,
       req.params["id"],
     );
+    return res.status(200).json({ body: response });
+  }
+});
+
+app.get("/api/get/subscriptions", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await getSubscriptions(req.session.user.id);
+
     return res.status(200).json({ body: response });
   }
 });
@@ -184,7 +193,9 @@ app.get("/api/get/topicsWithLatest", async function (req, res) {
 
 app.post("/api/post/topic", async function (req, res) {
   if (checkCookie(req, res)) {
-    await submitTopic(req.body);
+    const result = await submitTopic(req.body);
+    const topicId = result.insertedId.toString();
+    await addSubscription(req.session.user.id, topicId);
 
     res.redirect("/topics");
   }
