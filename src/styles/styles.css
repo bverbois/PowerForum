@@ -7,9 +7,30 @@ div.create-form {
 } */
 
 h1,
+h2,
 div {
   color: rgb(255, 255, 255);
   font-family: sans-serif;
+}
+
+.oneline {
+  display: flex;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.block {
+  background-image: url(./icons/ban-solid-full.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 20px;
+  height: 20px;
 }
 
 button.subscribe {

@@ -4,12 +4,20 @@ const response = await fetch(`/api/topic/${id}`);
 const data = await response.json();
 console.log(data);
 
-const title = document.getElementById("title");
+const header = document.getElementById("header");
+const title = document.createElement("h1");
+const subscribeButton = document.createElement("button");
+
 const description = document.getElementById("description");
 const messages = document.getElementById("messages");
 
-title.textContent = `Title: ${data.body.name}`;
-description.textContent = `Description: ${data.body.description}`;
+header.className = "header";
+title.textContent = `${data.body.name}`;
+subscribeButton.textContent = "Subscribe";
+description.textContent = `${data.body.description}`;
+
+header.appendChild(title);
+header.appendChild(subscribeButton);
 
 if (data.body.messages?.length > 0) {
   data.body.messages.forEach((msg) => {
@@ -25,6 +33,7 @@ if (data.body.messages?.length > 0) {
     messages.appendChild(container);
   });
 } else {
+  const content = document.createElement("p");
   content.textContent = "No messages yet...";
   messages.appendChild(content);
 }

@@ -4,28 +4,12 @@
   <head>
     <script defer type="module" src="../scripts/displayTopic.js"></script>
     <script defer type="module" src="../scripts/createMessage.js"></script>
+    <link rel="stylesheet" href="../styles/styles.css" />
   </head>
   <body id="body1">
-    <h1 id="title"></h1>
+    <div id="header"></div>
     <h2 id="description"></h2>
     <div id="messages"></div>
-    <form id="message-create-form" method="POST">
-      <textarea
-        id="message-body"
-        name="message-body"
-        rows="3"
-        cols="70"
-        placeholder="Write a new message..."
-      ></textarea>
-      <br />
-      <button
-        type="submit"
-        form="message-create-form"
-        id="message-submit"
-        name="message-submit"
-      >
-        Submit
-      </button>
-    </form>
+    <div id="message-submit"></div>
   </body>
 </html>
