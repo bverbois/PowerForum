@@ -13,7 +13,7 @@ export async function submitTopic(topic) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
   const response = await collection.insertOne(topicToCreate);
-  console.log(response);
+  return response;
 }
 
 export async function getAllTopics() {
@@ -23,6 +23,34 @@ export async function getAllTopics() {
 
   // response.forEach((r) => {
   //   console.log(`Name: ${r.name} \nDescription: ${r.description}`);
+  // });
+
+  return response;
+}
+
+export async function getTopicsWithLatest(topics) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+
+  let topicIds = [];
+
+  topics.forEach((topic) => {
+    topicIds.push(topic._id);
+    console.log(topic._id);
+  });
+
+  const response = await database
+    .collection("topics")
+    .find({ _id: { $in: topicIds } })
+    .project({
+      name: 1,
+      description: 1,
+      latestTwo: { $slice: ["$messages", -2] },
+    })
+    .toArray();
+
+  // response.forEach((topic) => {
+  //   console.log(topic);
   // });
 
   return response;

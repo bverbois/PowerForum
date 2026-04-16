@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Database } from "../connections/database.js";
+import { getTopicsWithLatest } from "./TopicsController.js";
 
 const collectionName = "users";
 
@@ -8,7 +9,8 @@ export async function submitUser(user) {
     name: user.name,
     username: user.username,
     password: user.password,
-    messageIds: [],
+    messages: [],
+    topics: [],
   };
 
   const database = Database.getInstance();
@@ -30,18 +32,39 @@ export async function authenticateUser(user) {
     projection: { password: 0 },
   });
 
-  console.log(response);
+  //getTopicsWithLatest(response.topics);
+
+  //console.log(topics);
   return response;
 }
 
-export async function getTopic(topicId) {
-  const oid = new ObjectId(topicId);
-
+export async function getUserWithSubscriptions(id) {
   const database = Database.getInstance();
-  const collection = database.collection("topics");
-  const response = await collection.findOne({ _id: oid });
-  console.log(response);
+  const collection = database.collection(collectionName);
+  const oid = new ObjectId(id);
+  const response = await collection.findOne(
+    { _id: oid },
+    {
+      projection: { password: 0, messages: 0 },
+    },
+  );
 
+  //console.log(response);
+  return response;
+}
+
+export async function getSubscriptions(id) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const oid = new ObjectId(id);
+  const response = await collection.findOne(
+    { _id: oid },
+    {
+      projection: { password: 0, messages: 0, _id: 0, name: 0, username: 0 },
+    },
+  );
+
+  //console.log(response);
   return response;
 }
 
@@ -71,3 +94,28 @@ export async function getUsersByMessages(messages) {
   return users;
 }
 
+export async function removeSubscription(userId, topicId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const userOid = new ObjectId(userId);
+  const topicOid = new ObjectId(topicId);
+  const result = await collection.updateOne(
+    { _id: userOid },
+    { $pull: { topics: { _id: topicOid } } },
+  );
+
+  console.log(result);
+}
+
+export async function addSubscription(userId, topicId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const userOid = new ObjectId(userId);
+  const topicOid = new ObjectId(topicId);
+  const result = await collection.updateOne(
+    { _id: userOid },
+    { $push: { topics: { _id: topicOid } } },
+  );
+
+  console.log(result);
+}
