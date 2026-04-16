@@ -42,8 +42,6 @@ export async function submitMessage(request, user) {
     username: username,
   };
 
-  console.log(messageToCreate);
-
   const topicId = new ObjectId(request.topic_id);
 
   const response = await topicsCollection.updateOne(
@@ -55,16 +53,6 @@ export async function submitMessage(request, user) {
     { _id: userOid },
     { $push: { messages: { _id: messageId } } },
   );
-
-  // const user = await usersCollection.findOneAndUpdate(
-  //   { _id: userOid },
-  //   { $push: { messages: messageId } },
-  //   { returnNewDocument: true },
-  // );
-
-  // messageToCreate.username = user.username;
-
-  
 
   console.log(response);
   return messageToCreate;

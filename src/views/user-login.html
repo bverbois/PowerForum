@@ -5,33 +5,36 @@
     <!-- Styles aren't working, idk why yet -->
     <!-- <link rel="stylesheet" href="styles.css" /> -->
     <script defer type="module" src="../scripts/invalidLogin.js"></script>
+    <link rel="stylesheet" href="../styles/styles.css" />
   </head>
-  <h1>User Login</h1>
   <body>
-    <form id="form1">
-      <div>
-        <label for="username">Username: </label>
-        <input id="username" type="text" name="username" value="" /> <br />
-      </div>
-      <div>
-        <label for="password">Password: </label>
-        <input id="password" type="text" name="password" value="" /><br />
-      </div>
-      <div>
-        <button type="submit" id="submit-btn" name="submit-btn" form="form1">
-          Submit
-        </button>
-        <button
-          onclick="window.location.href = '/user/create'"
-          id="register-button"
-          name="register-button"
-          type="button"
-        >
-          Register
-        </button>
-      </div>
-      <br />
-      <label id="error" style="color: red"></label>
-    </form>
+    <div>
+      <h1>User Login</h1>
+      <form id="form1">
+        <div>
+          <label for="username">Username: </label>
+          <input id="username" type="text" name="username" value="" /> <br />
+        </div>
+        <div>
+          <label for="password">Password: </label>
+          <input id="password" type="text" name="password" value="" /><br />
+        </div>
+        <div>
+          <button type="submit" id="submit-btn" name="submit-btn" form="form1">
+            Submit
+          </button>
+          <button
+            onclick="window.location.href = '/user/create'"
+            id="register-button"
+            name="register-button"
+            type="button"
+          >
+            Register
+          </button>
+        </div>
+        <br />
+        <label id="error" style="color: red"></label>
+      </form>
+    </div>
   </body>
 </html>

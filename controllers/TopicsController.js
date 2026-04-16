@@ -8,6 +8,7 @@ export async function submitTopic(topic) {
     name: topic.name,
     description: topic.description,
     messages: [],
+    accessCounter: 0,
   };
 
   const database = Database.getInstance();
@@ -21,9 +22,15 @@ export async function getAllTopics() {
   const collection = database.collection(collectionName);
   let response = await collection.find({}).toArray();
 
-  // response.forEach((r) => {
-  //   console.log(`Name: ${r.name} \nDescription: ${r.description}`);
-  // });
+  let topicIds = [];
+  response.forEach((topic) => {
+    topicIds.push(topic._id);
+  });
+
+  collection.updateMany(
+    { _id: { $in: topicIds } },
+    { $inc: { accessCounter: 1 } },
+  );
 
   return response;
 }
@@ -36,11 +43,9 @@ export async function getTopicsWithLatest(topics) {
 
   topics.forEach((topic) => {
     topicIds.push(topic._id);
-    console.log(topic._id);
   });
 
-  const response = await database
-    .collection("topics")
+  const response = await collection
     .find({ _id: { $in: topicIds } })
     .project({
       name: 1,
@@ -49,9 +54,10 @@ export async function getTopicsWithLatest(topics) {
     })
     .toArray();
 
-  // response.forEach((topic) => {
-  //   console.log(topic);
-  // });
+  collection.updateMany(
+    { _id: { $in: topicIds } },
+    { $inc: { accessCounter: 1 } },
+  );
 
   return response;
 }
@@ -62,7 +68,11 @@ export async function getTopic(topicId) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
   const response = await collection.findOne({ _id: oid });
-  console.log(response);
+
+  collection.updateOne(
+    { _id: oid },
+    { $inc: { accessCounter: 1 } },
+  );
 
   return response;
 }

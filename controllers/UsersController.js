@@ -16,7 +16,6 @@ export async function submitUser(user) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
   const response = await collection.insertOne(userToCreate);
-  console.log(response);
 }
 
 export async function authenticateUser(user) {
@@ -32,9 +31,6 @@ export async function authenticateUser(user) {
     projection: { password: 0 },
   });
 
-  //getTopicsWithLatest(response.topics);
-
-  //console.log(topics);
   return response;
 }
 
@@ -49,7 +45,6 @@ export async function getUserWithSubscriptions(id) {
     },
   );
 
-  //console.log(response);
   return response;
 }
 
@@ -64,7 +59,6 @@ export async function getSubscriptions(id) {
     },
   );
 
-  //console.log(response);
   return response;
 }
 
@@ -83,10 +77,7 @@ export async function getUsersByMessages(messages) {
     .project({
       username: 1,
     });
-  // .project({
-  //   messages: { $elemMatch: { _id: { $in: messageIds } } },
-  //   username: 1,
-  // });
+
   for await (let user of results) {
     users.push(user);
   }
@@ -103,8 +94,6 @@ export async function removeSubscription(userId, topicId) {
     { _id: userOid },
     { $pull: { topics: { _id: topicOid } } },
   );
-
-  console.log(result);
 }
 
 export async function addSubscription(userId, topicId) {
@@ -116,6 +105,4 @@ export async function addSubscription(userId, topicId) {
     { _id: userOid },
     { $push: { topics: { _id: topicOid } } },
   );
-
-  console.log(result);
 }
