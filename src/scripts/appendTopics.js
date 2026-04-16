@@ -1,3 +1,5 @@
+import { navbar } from "./navbar.js";
+
 const response = await fetch("/api/topics");
 const subscriptions = await fetch("/api/get/subscriptions");
 
@@ -9,7 +11,7 @@ subscriptionData.body.topics.forEach((sub) => {
   subIds.push(sub._id);
 });
 
-const container = document.getElementById("body");
+const container = document.getElementById("main-div");
 const subscribedTopics = document.createElement("div");
 const unsubscribedTopics = document.createElement("div");
 
@@ -68,6 +70,5 @@ data.body.forEach((topic) => {
   container.appendChild(unsubscribedTopics);
 });
 
-/*If a user subscribes to a topic, need to switch to the unsubscribe
-className and change fetch event listener function to be 
-fetch(`/api/delete/subscription/${topicElement.id}`)*/
+const navbarElement = document.getElementById("navbar");
+navbarElement.innerHTML = await navbar();

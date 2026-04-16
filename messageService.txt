@@ -1,11 +1,7 @@
 Project P1:
 Build a message exchanging service system (like a simplified Tweeter or message board for example) as follows. 
 
-A user can post a message in a subscribed topic. 
-    
+
 The architecture of the code must implement the MVC and Observer patterns. 
 
-You must include a link or route to produce the statistics of the number of times each topic (not each message individually) 
-    has been accessed. 
-    
 Please include this checklist Project-1 report template-simple-2 with your report (may be uploaded separately).

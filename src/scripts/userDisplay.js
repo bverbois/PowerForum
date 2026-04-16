@@ -9,8 +9,6 @@ username.textContent = data.body.username;
 if (data.body.topics.length > 0) {
   const container = document.createElement("div");
   data.body.topics.forEach((topic) => {
-    console.log("Topic: " + topic);
-
     const topicElement = document.createElement("div");
     const name = document.createElement("a");
     const description = document.createElement("div");
@@ -22,7 +20,7 @@ if (data.body.topics.length > 0) {
     name.href = `./topic/${topic._id}`;
     description.textContent = topic.description;
     unsubscribe.textContent = "Unsubscribe";
-    
+
     unsubscribe.addEventListener("click", (event) => {
       fetch(`/api/delete/subscription/${topicElement.id}`);
       container.removeChild(topicElement);

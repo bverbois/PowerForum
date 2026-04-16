@@ -43,19 +43,12 @@ app.use(
   }),
 );
 
-/***************** NOTE *****************/
-/* this line is very important. it is what
-loads the script needed by the 
-HTML file (src="../scripts/script.js")*/
 app.use(express.static("src"));
 app.use(express.static("node_modules"));
-/***************** NOTE *****************/
 
 function checkCookie(req, res) {
-  //Checks for authentication cookie
   const cookies = req.cookies;
   if (!cookies["auth"] || !req.session.user) {
-    console.log(cookies["auth"]);
     res.redirect("/user/login");
     return false;
   }
@@ -83,7 +76,6 @@ app.post("/api/authenticate", async function (req, res) {
   const result = await authenticateUser(req.body);
 
   if (!result) {
-    console.log("Username/password is incorrect");
     return res.status(400).json({
       authenticated: false,
       message: "Username/password is incorrect",
@@ -98,7 +90,6 @@ app.post("/api/authenticate", async function (req, res) {
     username: result.username,
   };
 
-  console.log("Authenticated");
   res.json({ authenticated: true });
 });
 
@@ -108,26 +99,12 @@ app.post("/api/post/user", async function (req, res) {
   res.redirect("/user/login");
 });
 
-/*After authentication, route to a new page, "/user/:username" 
-which displays the user's information along with their
-subscribed topics alongside the latest two messages (this is
-gotten from the getTopicsWithLatest() function in
-TopicsController.js)*/
-
 app.get("/api/get/user", async function (req, res) {
-  console.log(req.session.user.id);
   const result = await getUserWithSubscriptions(req.session.user.id);
   const topics = await getTopicsWithLatest(result.topics);
   result.topics = topics;
-  console.log("Result: ");
-  console.log(result);
-  console.log("Topics: ");
-  result.topics.map((topic) => {
-    console.log(topic);
-  });
 
   return res.status(200).json({ body: result });
-  //console.log(topics);
 });
 
 app.get("/api/delete/subscription/:id", async function (req, res) {
@@ -187,10 +164,6 @@ app.get("/user", function (req, res) {
   }
 });
 
-app.get("/api/get/topicsWithLatest", async function (req, res) {
-  const topics = getTopicsWithLatest(result.topics);
-});
-
 app.post("/api/post/topic", async function (req, res) {
   if (checkCookie(req, res)) {
     const result = await submitTopic(req.body);
@@ -212,20 +185,8 @@ app.get("/api/topics", async function (req, res) {
 app.get("/api/topic/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await getTopic(req.params["id"]);
-    // const users = await getUsersByMessages(response.messages);
-    // console.log("These are the users:\n");
-    // users.map((user) => {
-    //   console.log(user);
-    // });
-
-    // response.messages.forEach((msg) => {
-    //   let user = users.find((u) => u._id.toString() === msg.userId?.toString());
-    //   msg.username = user.username;
-    //   console.log(msg);
-    // });
 
     if (response === null) {
-      console.log("404 Topic not found :(");
       return res.status(404).json({ body: "404 Topic not found :(" });
     }
 
@@ -242,7 +203,6 @@ app.get("/topic/create", function (req, res) {
       },
     );
   }
-  console.log(req.session.user);
 });
 
 app.get("/topics", function (req, res) {
@@ -254,7 +214,6 @@ app.get("/topics", function (req, res) {
       },
     );
   }
-  console.log(req.session.user);
 });
 
 app.get("/topic/:id", function (req, res) {
@@ -268,10 +227,20 @@ app.get("/topic/:id", function (req, res) {
   }
 });
 
+app.get("/topics/statistics", function (req, res) {
+  if (checkCookie(req, res)) {
+    res.sendFile(
+      path.join(import.meta.dirname, "./src/views/topics-access-counts.html"),
+      (err) => {
+        errorCheck(err);
+      },
+    );
+  }
+});
+
 app.post("/api/post/message", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await submitMessage(req.body, req.session.user);
-    console.log(response);
     return res.status(201).json({ body: response });
   }
 });

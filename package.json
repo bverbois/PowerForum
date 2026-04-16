@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@mantine/core": "^9.0.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.0",
     "express": "^5.2.1",
@@ -8,13 +9,15 @@
     "vite": "^8.0.3"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "jest"
   },
   "engines": {
     "node": ">=14"
   },
   "type": "module",
   "devDependencies": {
-    "@types/mongodb": "^4.0.6"
+    "@types/mongodb": "^4.0.6",
+    "jest": "^30.3.0"
   }
 }

@@ -54,11 +54,3 @@ export class Database {
     console.log("Client connection closed...");
   }
 }
-
-// const db = Database.getInstance();
-// const response = await db.collection("topics").insertOne({
-//   name: "This is a topic",
-//   description: "This is a description",
-// });
-// console.log(response);
-// db.closeConnection();

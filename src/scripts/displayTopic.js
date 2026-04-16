@@ -1,8 +1,9 @@
+import { navbar } from "./navbar.js";
+
 const paths = window.location.pathname.split("/");
 const id = paths[paths.length - 1];
 const response = await fetch(`/api/topic/${id}`);
 const data = await response.json();
-console.log(data);
 
 const header = document.getElementById("header");
 const title = document.createElement("h1");
@@ -37,3 +38,6 @@ if (data.body.messages?.length > 0) {
   content.textContent = "No messages yet...";
   messages.appendChild(content);
 }
+
+const navbarElement = document.getElementById("navbar");
+navbarElement.innerHTML = await navbar();

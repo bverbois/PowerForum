@@ -2,7 +2,6 @@ const response = await fetch("/api/get/subscriptions");
 const subscriptions = await response.json();
 const paths = window.location.pathname.split("/");
 const topicId = paths[paths.length - 1];
-//const body = document.getElementById("body1");
 
 let subIds = [];
 subscriptions.body.topics.forEach((topic) => {
