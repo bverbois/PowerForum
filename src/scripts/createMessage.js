@@ -1,17 +1,28 @@
-const response = await fetch("/api/get/subscriptions");
-const subscriptions = await response.json();
 const paths = window.location.pathname.split("/");
 const topicId = paths[paths.length - 1];
-
-let subIds = [];
-subscriptions.body.topics.forEach((topic) => {
-  subIds.push(topic._id);
-});
 const messageSubmit = document.getElementById("message-submit");
-if (!subIds.includes(topicId)) {
+const body = document.getElementById("body1");
+const container = document.createElement("div");
+
+async function getSubIds() {
+  const response = await fetch("/api/get/subscriptions");
+  const subscriptions = await response.json();
+  var subIds = [];
+  subscriptions.body.topics.forEach((topic) => {
+    subIds.push(topic._id);
+  });
+  return subIds;
+}
+
+function notSubscribed() {
+  if (document.getElementById("message-submit-container")) {
+    const temp = document.getElementById("message-submit-container");
+    messageSubmit.removeChild(temp);
+  }
   const container = document.createElement("div");
   const content = document.createElement("div");
   const icon = document.createElement("div");
+  container.id = "message-submit-container";
   content.textContent = "Subscribe to post a message...";
   container.className = "oneline";
   icon.className = "block";
@@ -19,15 +30,31 @@ if (!subIds.includes(topicId)) {
   container.appendChild(icon);
   container.appendChild(content);
   messageSubmit.appendChild(container);
-} else {
+}
+
+async function subscribed() {
   await fetch("../views/topic-display-form.html")
     .then((response) => response.text())
     .then((data) => {
+      if (document.getElementById("message-submit-container")) {
+        const temp = document.getElementById("message-submit-container");
+        messageSubmit.removeChild(temp);
+      }
       const container = document.createElement("div");
+      container.id = "message-submit-container";
       container.innerHTML = data;
       messageSubmit.appendChild(container);
     });
   messageElement();
+}
+
+export async function checkIfSubscribed() {
+  const subIds = await getSubIds();
+  if (!subIds.includes(topicId)) {
+    notSubscribed();
+  } else {
+    subscribed();
+  }
 }
 
 function messageElement() {

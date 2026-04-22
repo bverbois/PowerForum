@@ -40,6 +40,28 @@ button.unsubscribe {
   height: 20px;
 }
 
+button.subscribe-topic-listing {
+  background-image: url(./icons/star-regular-full-white.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 35px;
+  height: 35px;
+}
+
+button.unsubscribe-topic-listing {
+  background-image: url(./icons/star-solid-full-white.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 35px;
+  height: 35px;
+}
+
 .navbutton {
   background-repeat: no-repeat;
   background-size: contain;
@@ -67,6 +89,7 @@ button.unsubscribe {
   flex-direction: column;
   padding: 5px;
   padding-left: 0;
+  padding-top: 15px;
   align-items: center;
 }
 

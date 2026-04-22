@@ -3,11 +3,13 @@
 <html>
   <head>
     <link rel="stylesheet" href="../styles/styles.css" />
+    <script defer type="module" src="../scripts/appendNavbar.js"></script>
   </head>
 
-  <body>
+  <body id="body1" style="display: flex">
+    <div id="navbar"></div>
     <div>
-      <h1>Create User</h1>
+      <h1>Register</h1>
       <form action="/api/post/user" method="POST">
         <div>
           <label for="name">Name: </label>
