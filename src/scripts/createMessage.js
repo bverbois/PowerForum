@@ -4,7 +4,7 @@ const messageSubmit = document.getElementById("message-submit");
 const body = document.getElementById("body1");
 const container = document.createElement("div");
 
-async function getSubIds() {
+export async function getSubIds() {
   const response = await fetch("/api/get/subscriptions");
   const subscriptions = await response.json();
   var subIds = [];
@@ -12,6 +12,15 @@ async function getSubIds() {
     subIds.push(topic._id);
   });
   return subIds;
+}
+
+export async function checkIfSubscribed() {
+  const subIds = await getSubIds();
+  if (!subIds.includes(topicId)) {
+    notSubscribed();
+  } else {
+    subscribed();
+  }
 }
 
 function notSubscribed() {
@@ -46,15 +55,6 @@ async function subscribed() {
       messageSubmit.appendChild(container);
     });
   messageElement();
-}
-
-export async function checkIfSubscribed() {
-  const subIds = await getSubIds();
-  if (!subIds.includes(topicId)) {
-    notSubscribed();
-  } else {
-    subscribed();
-  }
 }
 
 function messageElement() {

@@ -2,16 +2,26 @@
 
 <html>
   <head>
-    <script defer type="module" src="../scripts/appendTopics.js"></script>
+    <script defer type="module" src="../scripts/displayTopics.js"></script>
     <link rel="stylesheet" href="../styles/styles.css" />
   </head>
   <body id="body" name="body" style="display: flex">
     <div id="navbar"></div>
     <div id="main-div">
-      <h1>Topics</h1>
-      <button onclick="window.location.href = '/topic/create'">Create</button>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        "
+      >
+        <h1>Topics</h1>
+        <button
+          onclick="window.location.href = '/topic/create'"
+          class="create"
+        ></button>
+      </div>
     </div>
   </body>
-
   <br />
 </html>

@@ -1,20 +1,15 @@
-import { checkIfSubscribed } from "./createMessage.js";
+import { checkIfSubscribed, getSubIds } from "./createMessage.js";
 import { navbar } from "./navbar.js";
 
 const paths = window.location.pathname.split("/");
 const id = paths[paths.length - 1];
 const response = await fetch(`/api/topic/${id}`);
-const subscriptions = await fetch("/api/get/subscriptions");
 
 const data = await response.json();
-const subscriptionData = await subscriptions.json();
 
 checkIfSubscribed();
 
-let subIds = [];
-subscriptionData.body.topics.forEach((sub) => {
-  subIds.push(sub._id);
-});
+let subIds = await getSubIds();
 
 const header = document.getElementById("header");
 const title = document.createElement("h1");
