@@ -87,6 +87,7 @@ function messageElement() {
     });
     const result = await response.json();
 
+    messages.removeChild(document.getElementById("no-messages"));
     const container = document.createElement("div");
     const content = document.createElement("p");
     const username = document.createElement("p");

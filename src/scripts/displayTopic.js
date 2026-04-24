@@ -66,6 +66,7 @@ if (data.body.messages?.length > 0) {
 } else {
   const content = document.createElement("p");
   content.textContent = "No messages yet...";
+  content.id = "no-messages";
   messages.appendChild(content);
 }
 
