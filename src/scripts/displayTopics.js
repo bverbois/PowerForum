@@ -69,6 +69,3 @@ data.body.forEach((topic) => {
   container.appendChild(subscribedTopics);
   container.appendChild(unsubscribedTopics);
 });
-
-const navbarElement = document.getElementById("navbar");
-navbarElement.innerHTML = await navbar();

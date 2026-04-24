@@ -1,5 +1,6 @@
 import { Database } from "../connections/database.js";
 import { MongoClient, ObjectId } from "mongodb";
+import { forumEmmitter } from "../events.js";
 
 const collectionName = "topics";
 const database = Database.getInstance();
@@ -53,6 +54,8 @@ export async function submitMessage(request, user) {
     { _id: userOid },
     { $push: { messages: { _id: messageId } } },
   );
+
+  forumEmmitter.emit("newMessage", { senderId: userOid, topicId: topicId });
 
   console.log(response);
   return messageToCreate;

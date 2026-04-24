@@ -9,6 +9,7 @@ import {
   addSubscription,
   getUserWithSubscriptions,
   getSubscriptions,
+  checkUnread,
 } from "./controllers/UsersController.js";
 import {
   getAllTopics,
@@ -21,6 +22,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import dotenv from "dotenv";
 import { submitMessage } from "./controllers/MessagesController.js";
+import './services/notificationService.js'
 
 dotenv.config();
 const app = express();
@@ -130,6 +132,14 @@ app.get("/api/post/subscription/:id", async function (req, res) {
 app.get("/api/get/subscriptions", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await getSubscriptions(req.session.user.id);
+
+    return res.status(200).json({ body: response });
+  }
+});
+
+app.get("/api/get/user/hasUnread", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await checkUnread(req.session.user.id);
 
     return res.status(200).json({ body: response });
   }
