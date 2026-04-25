@@ -164,6 +164,13 @@ app.get("/user/login", function (req, res) {
   );
 });
 
+app.get("/user/logout", function (req, res) {
+  res.clearCookie("auth");
+  res.clearCookie("connect.sid");
+  res.session.user = null;
+  res.redirect("/");
+});
+
 app.get("/user", function (req, res) {
   if (checkCookie(req, res)) {
     res.sendFile(
