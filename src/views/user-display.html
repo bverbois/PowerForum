@@ -10,7 +10,20 @@
     <div id="navbar"></div>
     <div>
       <title id="title" name="title"></title>
-      <h1 id="username-header" name="username-header"></h1>
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <h1 id="username-header" name="username-header"></h1>
+        <button
+          onclick="window.location.href = '/user/logout'"
+          class="logout"
+        ></button>
+      </div>
       <div id="topics-div" name="topics-div"></div>
       <button onclick="window.location.href = '/topics'">See all topics</button>
     </div>
