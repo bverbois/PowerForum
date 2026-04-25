@@ -37,6 +37,7 @@ data.body.forEach((topic) => {
   }
 
   topicElement.id = topic._id;
+  topicElement.className = "topic-container";
   header.style = "display: flex; align-items: center";
   title.textContent = topic.name;
   title.href = `./topic/${topic._id}`;

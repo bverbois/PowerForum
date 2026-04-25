@@ -12,16 +12,17 @@ if (data.body.topics.length > 0) {
     const topicElement = document.createElement("div");
     const header = document.createElement("div");
     const name = document.createElement("a");
-    const description = document.createElement("div");
+    //const description = document.createElement("div");
     const unsubscribe = document.createElement("button");
     var messages = document.createElement("div");
 
     unsubscribe.className = "unsubscribe";
 
     topicElement.id = topic._id;
+    topicElement.className = "topic-container";
     name.textContent = `${topic.name}`;
     name.href = `./topic/${topic._id}`;
-    description.textContent = topic.description;
+    //description.textContent = topic.description;
 
     unsubscribe.addEventListener("click", (event) => {
       fetch(`/api/delete/subscription/${topicElement.id}`);
@@ -33,7 +34,7 @@ if (data.body.topics.length > 0) {
         const message = document.createElement("div");
 
         message.id = msg._id;
-        message.textContent = msg.body;
+        message.textContent = `${msg.username}: ${msg.body}`;
 
         messages.appendChild(message);
       });
@@ -42,7 +43,7 @@ if (data.body.topics.length > 0) {
     header.appendChild(unsubscribe);
     header.appendChild(name);
     topicElement.appendChild(header);
-    topicElement.appendChild(description);
+    //topicElement.appendChild(description);
     topicElement.appendChild(messages);
     container.appendChild(topicElement);
   });

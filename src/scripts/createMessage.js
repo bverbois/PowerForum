@@ -60,7 +60,6 @@ async function subscribed() {
 function messageElement() {
   var messageForm = document.forms["message-create-form"];
   const messageBody = document.getElementById("message-body");
-  const button = document.getElementById("message-submit");
   const messages = document.getElementById("messages");
   const error = document.createElement("p");
 
