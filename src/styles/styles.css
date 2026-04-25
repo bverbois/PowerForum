@@ -40,12 +40,46 @@ button.unsubscribe {
   height: 20px;
 }
 
+button.subscribe-topic-listing {
+  background-image: url(./icons/star-regular-full-white.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 35px;
+  height: 35px;
+}
+
+button.unsubscribe-topic-listing {
+  background-image: url(./icons/star-solid-full-white.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 35px;
+  height: 35px;
+}
+
 .navbutton {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
   background-color: transparent;
   border-color: transparent;
+  width: 40px;
+  height: 40px;
+}
+
+button.create {
+  background-image: url(./icons/plus-solid-full.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: rgb(189, 171, 10);
+  border-color: transparent;
+  border-radius: 6px;
   width: 40px;
   height: 40px;
 }
@@ -62,11 +96,16 @@ button.unsubscribe {
   background-image: url(./icons/user-solid-full.svg);
 }
 
+.statistics {
+  background-image: url(./icons/statistics.png);
+}
+
 .navbar {
   display: flex;
   flex-direction: column;
   padding: 5px;
   padding-left: 0;
+  padding-top: 15px;
   align-items: center;
 }
 
@@ -75,6 +114,7 @@ a {
   font-family: sans-serif;
   font-size: 18px;
   padding: 6px;
+  text-decoration: none;
 }
 
 label,
@@ -92,10 +132,26 @@ body {
   display: flex;
 }
 
+table,
+th,
+td {
+  border: solid;
+  border-color: white;
+  border-width: 1px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 3px;
+}
+
 h1,
 a,
 p,
-div {
+div,
+table {
   color: rgb(255, 255, 255);
   font-family: sans-serif;
 }

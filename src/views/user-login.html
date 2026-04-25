@@ -5,9 +5,11 @@
     <!-- Styles aren't working, idk why yet -->
     <!-- <link rel="stylesheet" href="styles.css" /> -->
     <script defer type="module" src="../scripts/invalidLogin.js"></script>
+    <script defer type="module" src="../scripts/appendNavbar.js"></script>
     <link rel="stylesheet" href="../styles/styles.css" />
   </head>
   <body>
+    <div id="navbar"></div>
     <div>
       <h1>User Login</h1>
       <form id="form1">
@@ -17,7 +19,7 @@
         </div>
         <div>
           <label for="password">Password: </label>
-          <input id="password" type="text" name="password" value="" /><br />
+          <input id="password" type="password" name="password" value="" /><br />
         </div>
         <div>
           <button type="submit" id="submit-btn" name="submit-btn" form="form1">

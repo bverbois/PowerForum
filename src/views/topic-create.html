@@ -3,26 +3,30 @@
 <html>
   <head>
     <link rel="stylesheet" href="../styles/styles.css" />
+    <script defer type="module" src="../scripts/appendNavbar.js"></script>
   </head>
-  <h1>Create New Topic</h1>
-  <body>
-    <form action="/api/post/topic" method="POST">
-      <div>
-        <label for="name">Name: </label>
-        <input type="text" name="name" value="" /> <br />
-      </div>
-      <div>
-        <label for="description">Description: </label> <br />
-        <textarea
-          id="description"
-          name="description"
-          rows="10"
-          cols="50"
-          placeholder="Enter your description here..."
-        ></textarea>
-        <br />
-      </div>
-      <input type="submit" name="submit" value="Submit" />
-    </form>
+  <body id="body1" style="display: flex">
+    <div id="navbar"></div>
+    <div>
+      <h1>Create New Topic</h1>
+      <form action="/api/post/topic" method="POST">
+        <div>
+          <label for="name">Name: </label>
+          <input type="text" name="name" value="" /> <br />
+        </div>
+        <div>
+          <label for="description">Description: </label> <br />
+          <textarea
+            id="description"
+            name="description"
+            rows="10"
+            cols="50"
+            placeholder="Enter your description here..."
+          ></textarea>
+          <br />
+        </div>
+        <input type="submit" name="submit" value="Submit" />
+      </form>
+    </div>
   </body>
 </html>
