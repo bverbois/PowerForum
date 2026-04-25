@@ -6,24 +6,27 @@
     <script defer type="module" src="../scripts/appendNavbar.js"></script>
   </head>
 
-  <body id="body1" style="display: flex">
+  <body id="body1">
     <div id="navbar"></div>
-    <div>
+    <div style="padding-left: 30%">
       <h1>Register</h1>
       <form action="/api/post/user" method="POST">
-        <div>
-          <label for="name">Name: </label>
-          <input type="text" name="name" value="" /> <br />
+        <div class="center">
+          <input type="text" name="name" value="" placeholder="Name" /> <br />
         </div>
-        <div>
-          <label for="username">Username: </label>
-          <input type="text" name="username" value="" /> <br />
+        <div class="center">
+          <input type="text" name="username" value="" placeholder="Username" />
+          <br />
         </div>
-        <div>
-          <label for="password">Password: </label>
-          <input type="Password" name="password" value="" /><br />
+        <div class="center">
+          <input
+            type="Password"
+            name="password"
+            value=""
+            placeholder="Password"
+          /><br />
         </div>
-        <input type="submit" name="submit" value="Submit" />
+        <button type="submit" name="submit" class="submit">Submit</button>
       </form>
     </div>
   </body>

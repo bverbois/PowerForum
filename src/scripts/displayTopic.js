@@ -1,5 +1,4 @@
 import { checkIfSubscribed, getSubIds } from "./createMessage.js";
-import { navbar } from "./navbar.js";
 
 const paths = window.location.pathname.split("/");
 const id = paths[paths.length - 1];
@@ -51,14 +50,16 @@ subscription.addEventListener("click", async (event) => {
 });
 
 if (data.body.messages?.length > 0) {
-  data.body.messages.forEach((msg) => {
+  data.body.messages.reverse().forEach((msg) => {
     const container = document.createElement("div");
     const content = document.createElement("p");
     content.id = msg._id;
     const username = document.createElement("p");
     username.id = msg.userId;
     username.textContent = msg.username;
+    username.className = "message-username";
     content.textContent = msg.body;
+    container.className = "message-container";
     container.appendChild(username);
     container.appendChild(content);
     messages.appendChild(container);
@@ -69,6 +70,3 @@ if (data.body.messages?.length > 0) {
   content.id = "no-messages";
   messages.appendChild(content);
 }
-
-const navbarElement = document.getElementById("navbar");
-navbarElement.innerHTML = await navbar();

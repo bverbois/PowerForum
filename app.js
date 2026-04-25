@@ -165,9 +165,10 @@ app.get("/user/login", function (req, res) {
 });
 
 app.get("/user/logout", function (req, res) {
-  res.clearCookie("auth");
-  res.clearCookie("connect.sid");
-  res.session.user = null;
+  if (checkCookie) {
+    res.clearCookie("auth");
+    res.clearCookie("connect.sid");
+  }
   res.redirect("/");
 });
 

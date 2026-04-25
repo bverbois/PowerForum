@@ -19,8 +19,6 @@ async function check(event) {
     const usernameInput = document.getElementById("username");
 
     errElement.textContent = "Username or Password is incorrect.";
-    usernameInput.style.borderColor = "red";
-    usernameInput.style.borderWidth = "2px";
   } else if (result.authenticated) {
     window.location.href = "/user";
   }
