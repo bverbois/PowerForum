@@ -14,8 +14,8 @@
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 25px;
-  height: 25px;
+  width: 60px;
+  height: 60px;
 }
 
 .block {
@@ -36,8 +36,9 @@ button.subscribe {
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 20px;
-  height: 20px;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
 }
 
 button.unsubscribe {
@@ -47,8 +48,14 @@ button.unsubscribe {
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 20px;
-  height: 20px;
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+}
+
+button.unsubscribe:hover,
+button.subscribe:hover {
+  background-color: rgba(255, 193, 7, 0.1);
 }
 
 button.subscribe-topic-listing {
@@ -58,8 +65,8 @@ button.subscribe-topic-listing {
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 35px;
-  height: 35px;
+  width: 60px;
+  height: 60px;
 }
 
 button.unsubscribe-topic-listing {
@@ -69,15 +76,26 @@ button.unsubscribe-topic-listing {
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 35px;
-  height: 35px;
+  width: 60px;
+  height: 60px;
 }
 
 button.submit {
-  border-radius: 8px;
-  color: white;
-  background-color: rgb(2, 48, 78);
-  padding: 8px;
+  border-radius: 6px;
+  color: rgb(255, 193, 7);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  background: rgba(1, 36, 59, 0.479);
+  padding: 8px 16px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.1s ease-in-out;
+  font-size: 2rem;
+}
+
+button.submit:hover {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: rgb(255, 193, 7);
 }
 
 .logout {
@@ -87,18 +105,8 @@ button.submit {
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 35px;
-  height: 35px;
-}
-
-.navbutton {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  background-color: transparent;
-  border-color: transparent;
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
 }
 
 button.create {
@@ -109,10 +117,25 @@ button.create {
   background-color: rgb(255, 193, 7);
   border-color: transparent;
   border-radius: 6px;
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
 }
-/* background-color: rgb(189, 171, 10); */
+
+.navbutton {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 8px;
+  width: 80px;
+  height: 80px;
+}
+
+.navbutton:hover {
+  background-color: rgba(1, 36, 59);
+}
+
 .home {
   background-image: url(./icons/house-solid-full.svg);
 }
@@ -127,15 +150,49 @@ button.create {
 
 .statistics {
   background-image: url(./icons/statistics.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 60px;
+  height: 60px;
+}
+
+div.stats-container {
+  padding: 10px;
+  margin-top: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  border-radius: 8px;
+}
+
+div.stats-container:hover {
+  background-color: rgba(1, 36, 59);
 }
 
 .navbar {
   display: flex;
   flex-direction: column;
+  margin-top: 0;
   padding: 5px;
   padding-left: 0;
-  padding-top: 15px;
   align-items: center;
+  position: fixed;
+  left: 0;
+  height: 100%;
+}
+
+form {
+  background-color: rgba(1, 36, 59, 0.2);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 4vh;
+  padding-right: 4vh;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
 }
 
 a {
@@ -150,13 +207,47 @@ a {
   background-color: rgba(1, 36, 59, 0.733);
   padding: 5px;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+.topic-container:hover {
+  background-color: rgba(1, 36, 59);
 }
 
 label,
 input {
-  display: table-cell;
   margin-bottom: 10px;
+  width: 100%;
+}
+
+input,
+textarea {
+  background: transparent;
+  border: 2px solid rgba(255, 193, 7, 0.5);
+  border-radius: 8px;
+  color: white;
+  font-size: xx-large;
+}
+
+.message-username {
+  font-weight: bold;
+}
+
+.message-container {
+  border-bottom: 0.2px solid rgba(255, 193, 7, 0.5);
+  width: 80%;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:hover {
+  border-color: rgba(255, 193, 7);
+}
+
+textarea:hover {
+  border-color: rgba(255, 193, 7);
 }
 
 label {
@@ -166,6 +257,14 @@ label {
 body {
   background-color: rgba(0, 16, 26);
   display: flex;
+  flex-direction: row;
+  gap: 100px;
+  margin-top: 0;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
 }
 
 table,
@@ -183,11 +282,23 @@ td {
   padding: 3px;
 }
 
-h1,
+h1 {
+  color: rgb(255, 255, 255);
+  font-family: sans-serif;
+  font-size: 5rem;
+  text-align: center;
+}
+
+h3 {
+  margin: 1px;
+}
+
 a,
 p,
 div,
-table {
+table,
+input {
   color: rgb(255, 255, 255);
   font-family: sans-serif;
+  font-size: 3rem;
 }

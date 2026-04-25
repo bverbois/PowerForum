@@ -1,5 +1,3 @@
-import { navbar } from "./navbar.js";
-
 const response = await fetch("/api/topics");
 const subscriptions = await fetch("/api/get/subscriptions");
 

@@ -7,15 +7,17 @@
   </head>
   <body id="body1" style="display: flex">
     <div id="navbar"></div>
-    <div>
-      <h1>Create New Topic</h1>
+    <div style="padding-left: 30%">
+      <h1>New Topic</h1>
       <form action="/api/post/topic" method="POST">
-        <div>
-          <label for="name">Name: </label>
-          <input type="text" name="name" value="" /> <br />
-        </div>
-        <div>
-          <label for="description">Description: </label> <br />
+        <div style="display: flex; flex-direction: column">
+          <input
+            type="text"
+            name="name"
+            value=""
+            placeholder="Name..."
+            style="box-sizing: border-box; width: 100%"
+          />
           <textarea
             id="description"
             name="description"
@@ -23,9 +25,10 @@
             cols="50"
             placeholder="Enter your description here..."
           ></textarea>
-          <br />
         </div>
-        <input type="submit" name="submit" value="Submit" />
+        <div style="padding-top: 3%">
+          <button type="submit" name="submit" class="submit">Submit</button>
+        </div>
       </form>
     </div>
   </body>

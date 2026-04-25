@@ -3,34 +3,31 @@
     <link rel="stylesheet" href="../styles/styles.css" />
   </head>
   <body>
-    <nav>
-      <div class="navbar">
-        <div style="padding: 5px">
-          <button
-            onclick="window.location.href = '/'"
-            class="navbutton home"
-          ></button>
-        </div>
-        <div style="padding: 5px">
-          <button
-            onclick="window.location.href = '/topics'"
-            class="navbutton topic"
-          ></button>
-        </div>
-        <div style="padding: 5px">
-          <button
-            onclick="window.location.href = '/user'"
-            class="navbutton user"
-          ></button>
-        </div>
-        <div style="padding: 5px; padding-top: 10px">
-          <button
-            onclick="window.location.href = '/topics/statistics'"
-            class="navbutton statistics"
-            style="height: 28px"
-          ></button>
-        </div>
+    <div class="navbar">
+      <div style="padding: 5px">
+        <button
+          onclick="window.location.href = '/'"
+          class="navbutton home"
+        ></button>
       </div>
-    </nav>
+      <div style="padding: 5px">
+        <button
+          onclick="window.location.href = '/topics'"
+          class="navbutton topic"
+        ></button>
+      </div>
+      <div style="padding: 5px">
+        <button
+          onclick="window.location.href = '/user'"
+          class="navbutton user"
+        ></button>
+      </div>
+      <div class="stats-container">
+        <button
+          onclick="window.location.href = '/topics/statistics'"
+          class="statistics"
+        ></button>
+      </div>
+    </div>
   </body>
 </html>

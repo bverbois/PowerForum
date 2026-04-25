@@ -69,11 +69,14 @@ function messageElement() {
     var hasError = false;
     const formData = new FormData(messageForm);
 
-    if (formData.get("message-body") === "") {
-      error.style.color = "red";
+    if (!formData.get("message-body").trim()) {
       error.textContent = "You can't submit an empty text box!";
+      error.style = "color: red; font-size: x-large;";
+      error.id = "error";
       hasError = true;
       return messageForm.append(error);
+    } else if (hasError === false && document.getElementById("error")) {
+      messageForm.removeChild(document.getElementById("error"));
     }
 
     formData.append("topic_id", topicId);
@@ -98,11 +101,13 @@ function messageElement() {
     content.textContent = result.body.body;
     username.id = result.body.userId;
     username.textContent = result.body.username;
+    username.className = "message-username";
     messageBody.value = "";
+    container.className = "message-container";
     hasError ?? messageForm.removeChild(error);
     container.appendChild(username);
     container.appendChild(content);
-    messages.appendChild(container);
+    messages.prepend(container);
   }
 
   messageForm.addEventListener("submit", submitWatch);
