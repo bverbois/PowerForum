@@ -55,7 +55,7 @@ export async function submitMessage(request, user) {
     { $push: { messages: { _id: messageId } } },
   );
 
-  forumEmmitter.emit("newMessage", { senderId: userOid, topicId: topicId });
+  forumEmmitter.emit("newMessage", { senderId: userOid, topicId: topicId, bool: true });
 
   console.log(response);
   return messageToCreate;

@@ -118,16 +118,30 @@ export async function getSubscribedUsers(topicId, senderId) {
   return results;
 }
 
-export async function updateUnreadStatus(senderId, topicId) {
+export async function updateUnreadStatus(senderId, topicId, bool) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);
 
   const response = await collection.updateMany(
     { "topics._id": topicId, _id: { $ne: senderId } },
-    { $set: { "topics.$[].hasUnread": true } },
+    { $set: { "topics.$[topic].hasUnread": bool } },
+    { arrayFilters: [{ "topic._id": topicId }] },
   );
-  console.log("here");
-  console.log(response);
+}
+
+export async function markUnreadFalse(userId, topicId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const userOid = new ObjectId(userId);
+  const topicOid = new ObjectId(topicId);
+
+  const response = await collection.updateOne(
+    {
+      _id: userOid,
+      "topics._id": topicOid,
+    },
+    { $set: { "topics.$.hasUnread": false } },
+  );
 }
 
 export async function checkUnread(userId) {

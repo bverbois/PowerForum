@@ -7,6 +7,17 @@
   justify-content: space-between;
 }
 
+.unread-messages {
+  background-image: url(./icons/unread-message.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  width: 25px;
+  height: 25px;
+}
+
 .block {
   background-image: url(./icons/ban-solid-full.svg);
   background-repeat: no-repeat;

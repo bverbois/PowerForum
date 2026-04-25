@@ -8,6 +8,7 @@ export async function submitTopic(topic) {
     name: topic.name,
     description: topic.description,
     messages: [],
+    topics: [],
     accessCounter: 0,
   };
 
@@ -69,11 +70,7 @@ export async function getTopic(topicId) {
   const collection = database.collection(collectionName);
   const response = await collection.findOne({ _id: oid });
 
-  collection.updateOne(
-    { _id: oid },
-    { $inc: { accessCounter: 1 } },
-  );
+  collection.updateOne({ _id: oid }, { $inc: { accessCounter: 1 } });
 
   return response;
 }
-
