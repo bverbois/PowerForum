@@ -85,6 +85,87 @@ export async function getUsersByMessages(messages) {
   return users;
 }
 
+export async function getSubscribedUsers(topicId, senderId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  var users = [];
+  const results = await collection
+    .find(
+      {
+        "topics._id": topicId,
+        _id: { $ne: senderId },
+      },
+      {
+        projection: {
+          password: 0,
+          messages: 0,
+          topics: 0,
+          name: 0,
+          username: 0,
+        },
+      },
+    )
+    .toArray();
+
+  for await (let user of results) {
+    users.push(user);
+  }
+
+  console.log(users);
+
+  console.log("finished");
+
+  return results;
+}
+
+export async function updateUnreadStatus(senderId, topicId, bool) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+
+  const response = await collection.updateMany(
+    { "topics._id": topicId, _id: { $ne: senderId } },
+    { $set: { "topics.$[topic].hasUnread": bool } },
+    { arrayFilters: [{ "topic._id": topicId }] },
+  );
+}
+
+export async function markUnreadFalse(userId, topicId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+  const userOid = new ObjectId(userId);
+  const topicOid = new ObjectId(topicId);
+
+  const response = await collection.updateOne(
+    {
+      _id: userOid,
+      "topics._id": topicOid,
+    },
+    { $set: { "topics.$.hasUnread": false } },
+  );
+}
+
+export async function checkUnread(userId) {
+  const database = Database.getInstance();
+  const collection = database.collection(collectionName);
+
+  const response = await collection.findOne(
+    {
+      _id: userId,
+    },
+    {
+      projection: {
+        password: 0,
+        messages: 0,
+        topics: 0,
+        name: 0,
+        username: 0,
+      },
+    },
+  );
+
+  return response;
+}
+
 export async function removeSubscription(userId, topicId) {
   const database = Database.getInstance();
   const collection = database.collection(collectionName);

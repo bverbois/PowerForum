@@ -21,6 +21,7 @@ unsubscribedTopics.name = "unsubscribed-topics";
 data.body.forEach((topic) => {
   const topicElement = document.createElement("div");
   const header = document.createElement("div");
+
   const title = document.createElement("a");
   const description = document.createElement("div");
   const subscription = document.createElement("button");
@@ -36,6 +37,7 @@ data.body.forEach((topic) => {
   }
 
   topicElement.id = topic._id;
+  header.style = "display: flex; align-items: center";
   title.textContent = topic.name;
   title.href = `./topic/${topic._id}`;
   description.textContent = topic.description;
@@ -64,11 +66,15 @@ data.body.forEach((topic) => {
 
   header.appendChild(subscription);
   header.appendChild(title);
+  const sub = subscriptionData.body.topics.find((x) => x._id == topic._id);
+  if (sub?.hasUnread) {
+    const redCircle = document.createElement("button");
+    redCircle.className = "unread-messages";
+    header.appendChild(redCircle);
+  }
+
   topicElement.appendChild(header);
   topicElement.appendChild(description);
   container.appendChild(subscribedTopics);
   container.appendChild(unsubscribedTopics);
 });
-
-const navbarElement = document.getElementById("navbar");
-navbarElement.innerHTML = await navbar();

@@ -86,8 +86,11 @@ function messageElement() {
       body: JSON.stringify(data),
     });
     const result = await response.json();
-
-    messages.removeChild(document.getElementById("no-messages"));
+    () => {
+      if (document.getElementById("no-messages")) {
+        messages.removeChild(document.getElementById("no-messages"));
+      }
+    };
     const container = document.createElement("div");
     const content = document.createElement("p");
     const username = document.createElement("p");

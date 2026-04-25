@@ -9,6 +9,8 @@ import {
   addSubscription,
   getUserWithSubscriptions,
   getSubscriptions,
+  checkUnread,
+  markUnreadFalse,
 } from "./controllers/UsersController.js";
 import {
   getAllTopics,
@@ -21,6 +23,7 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import dotenv from "dotenv";
 import { submitMessage } from "./controllers/MessagesController.js";
+import "./services/notificationService.js";
 
 dotenv.config();
 const app = express();
@@ -135,6 +138,14 @@ app.get("/api/get/subscriptions", async function (req, res) {
   }
 });
 
+app.get("/api/get/user/hasUnread", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await checkUnread(req.session.user.id);
+
+    return res.status(200).json({ body: response });
+  }
+});
+
 app.get("/user/create", function (req, res) {
   res.sendFile(
     path.join(import.meta.dirname, "./src/views/user-create.html"),
@@ -184,7 +195,9 @@ app.get("/api/topics", async function (req, res) {
 
 app.get("/api/topic/:id", async function (req, res) {
   if (checkCookie(req, res)) {
-    const response = await getTopic(req.params["id"]);
+    const id = req.params["id"];
+    const response = await getTopic(id);
+    const update = await markUnreadFalse(req.session.user.id, id);
 
     if (response === null) {
       return res.status(404).json({ body: "404 Topic not found :(" });

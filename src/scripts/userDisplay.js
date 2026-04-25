@@ -1,13 +1,10 @@
-import { getSubIds } from "./createMessage.js";
-
 const response = await fetch("/api/get/user");
 const data = await response.json();
 
-let subIds = await getSubIds();
 const username = document.getElementById("username-header");
 const topics = document.getElementById("topics-div");
 
-username.textContent = data.body.username;
+username.textContent = `Welcome, ${data.body.username}`;
 
 if (data.body.topics.length > 0) {
   const container = document.createElement("div");
