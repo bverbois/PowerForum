@@ -5,10 +5,13 @@ const collectionName = "topics";
 const database = Database.getInstance();
 const collection = database.collection(collectionName);
 
-export async function submitTopic(topic) {
+export async function submitTopic(topic, userId) {
+  const userOid = new ObjectId(userId);
+
   const topicToCreate = {
     name: topic.name,
     description: topic.description,
+    userId: userOid,
     messages: [],
     topics: [],
     accessCounter: 0,
@@ -64,6 +67,12 @@ export async function getTopic(topicId) {
   const response = await collection.findOne({ _id: oid });
 
   collection.updateOne({ _id: oid }, { $inc: { accessCounter: 1 } });
+
+  return response;
+}
+
+export async function deleteTopic(id) {
+  const response = await collection.deleteOne({ _id: new ObjectId(id) });
 
   return response;
 }

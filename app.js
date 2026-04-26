@@ -11,6 +11,7 @@ import {
   markUnreadFalse,
 } from "./controllers/UsersController.js";
 import {
+  deleteTopic,
   getAllTopics,
   getTopic,
   getTopicsWithLatest,
@@ -124,6 +125,12 @@ app.get("/api/get/user", async function (req, res) {
   return res.status(200).json({ body: result });
 });
 
+app.get("/api/user/:id", async function (req, res) {
+  const result = await getUserById(req.params["id"]);
+
+  return res.status(200).json({ body: result });
+});
+
 app.get("/api/delete/subscription/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await removeSubscription(
@@ -195,7 +202,7 @@ app.post("/api/post/topic", async function (req, res) {
       return res.status(400).json({ body: "Name cannot be empty." });
     }
 
-    const result = await submitTopic(req.body);
+    const result = await submitTopic(req.body, req.session.user.id);
     const topicId = result.insertedId.toString();
     await addSubscription(req.session.user.id, topicId);
 
@@ -214,8 +221,11 @@ app.get("/api/topics", async function (req, res) {
 app.get("/api/topic/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const id = req.params["id"];
-    const response = await getTopic(id);
+    var response = await getTopic(id);
     const update = await markUnreadFalse(req.session.user.id, id);
+    const user = await getUserWithSubscriptions(response.userId);
+    response.username = user?.username;
+    console.log(response);
 
     if (response === null) {
       return res.status(404).json({ body: "404 Topic not found :(" });
@@ -223,6 +233,18 @@ app.get("/api/topic/:id", async function (req, res) {
 
     return res.status(200).json({ body: response });
   }
+});
+
+app.get("/api/delete/topic/:id", async function (req, res) {
+  const id = req.params["id"];
+  const response = await deleteTopic(id);
+  const responseRemoveSub = await removeSubscription(req.session.user.id, id);
+  console.log(responseRemoveSub.modifiedCount);
+  if (response.deleteCount === 0) {
+    return res.status(404).json({ body: response });
+  }
+
+  return res.status(200).json({ body: response });
 });
 
 app.get("/topic/create", function (req, res) {

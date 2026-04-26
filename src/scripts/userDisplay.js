@@ -1,5 +1,13 @@
 const response = await fetch("/api/get/user");
+const subscriptions = await fetch("/api/get/subscriptions");
+
 const data = await response.json();
+const subscriptionData = await subscriptions.json();
+
+let subIds = [];
+subscriptionData.body.topics.forEach((sub) => {
+  subIds.push(sub._id);
+});
 
 const username = document.getElementById("username-header");
 const container = document.getElementById("topics-div");
@@ -42,6 +50,13 @@ if (data.body.topics.length > 0) {
 
     header.appendChild(unsubscribe);
     header.appendChild(name);
+    const sub = subscriptionData.body.topics.find((x) => x._id == topic._id);
+    if (sub?.hasUnread) {
+      const unreadIcon = document.createElement("button");
+      unreadIcon.className = "unread-messages";
+      header.appendChild(unreadIcon);
+    }
+
     topicElement.appendChild(header);
     topicElement.appendChild(messages);
     container.appendChild(topicElement);

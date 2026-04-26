@@ -25,10 +25,15 @@ if (subIds.includes(id)) {
 
 const description = document.getElementById("description");
 const messages = document.getElementById("messages");
+const username = document.getElementById("username");
 
 header.className = "header";
 title.textContent = `${data.body.name}`;
+title.className = "topic-listing-title";
 description.textContent = `${data.body.description}`;
+if (data.body.username) {
+  username.textContent = `created by ${data.body.username}`;
+}
 
 buttonContainer.appendChild(subscription);
 header.appendChild(buttonContainer);

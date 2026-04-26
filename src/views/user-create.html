@@ -9,49 +9,78 @@
   </head>
   <body id="body1">
     <div id="navbar"></div>
-    <div style="width: 80%">
-      <h1>Register</h1>
-      <form id="form1">
-        <div class="flex-row">
-          <input type="text" name="name" value="" placeholder="Name" />
-          <label class="asterisk">*</label>
-        </div>
-        <div class="flex-row">
-          <input type="text" name="username" value="" placeholder="Username" />
-          <label class="asterisk">*</label>
-        </div>
-        <div class="flex-row">
-          <input
-            type="Password"
-            name="password"
-            value=""
-            placeholder="Password"
-          />
-          <label class="asterisk">*</label>
-        </div>
-        <div style="display: flex; gap: 5%; padding-top: 5%">
-          <button
-            type="submit"
-            id="submit-btn"
-            name="submit"
-            form="form1"
-            class="submit"
-          >
-            Submit
-          </button>
-          <button
-            type="button"
-            onclick="window.location.href = '/user/login'"
-            class="submit"
-          >
-            Cancel
-          </button>
-        </div>
-        <label
-          id="error"
-          style="color: red; font-size: x-large; margin-top: 5%"
-        ></label>
-      </form>
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-content: center;
+          justify-content: center;
+        "
+      >
+        <h1>Register</h1>
+        <form id="form1" style="padding-right: 30px; padding-left: 30px">
+          <div class="flex-row">
+            <input
+              type="text"
+              name="name"
+              value=""
+              placeholder="Name"
+              style="font-size: 40px"
+            />
+            <label class="asterisk">*</label>
+          </div>
+          <div class="flex-row">
+            <input
+              type="text"
+              name="username"
+              value=""
+              placeholder="Username"
+              style="font-size: 40px"
+            />
+            <label class="asterisk">*</label>
+          </div>
+          <div class="flex-row">
+            <input
+              type="Password"
+              name="password"
+              value=""
+              placeholder="Password"
+              style="font-size: 40px"
+            />
+            <label class="asterisk">*</label>
+          </div>
+          <div style="display: flex; gap: 5%; padding-top: 5%">
+            <button
+              type="submit"
+              id="submit-btn"
+              name="submit"
+              form="form1"
+              class="submit"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              onclick="window.location.href = '/user/login'"
+              class="cancel"
+            >
+              Cancel
+            </button>
+          </div>
+          <label
+            id="error"
+            style="color: red; font-size: x-large; margin-top: 5%"
+          ></label>
+        </form>
+      </div>
     </div>
   </body>
 </html>

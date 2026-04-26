@@ -68,9 +68,9 @@ data.body.forEach((topic) => {
   header.appendChild(title);
   const sub = subscriptionData.body.topics.find((x) => x._id == topic._id);
   if (sub?.hasUnread) {
-    const redCircle = document.createElement("button");
-    redCircle.className = "unread-messages";
-    header.appendChild(redCircle);
+    const unreadIcon = document.createElement("button");
+    unreadIcon.className = "unread-messages";
+    header.appendChild(unreadIcon);
   }
 
   topicElement.appendChild(header);

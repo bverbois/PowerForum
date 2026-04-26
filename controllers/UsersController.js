@@ -23,9 +23,12 @@ export async function authenticateUser(user) {
     password: user.password,
   };
 
-  const response = await collection.findOne(userToValidate, {
-    projection: { password: 0 },
-  });
+  const response = await collection.findOne(
+    { username: new RegExp(user.username, "i"), password: user.password },
+    {
+      projection: { password: 0 },
+    },
+  );
 
   return response;
 }
@@ -129,6 +132,8 @@ export async function removeSubscription(userId, topicId) {
     { _id: userOid },
     { $pull: { topics: { _id: topicOid } } },
   );
+
+  return result;
 }
 
 export async function addSubscription(userId, topicId) {
@@ -138,4 +143,6 @@ export async function addSubscription(userId, topicId) {
     { _id: userOid },
     { $push: { topics: { _id: topicOid } } },
   );
+
+  return result;
 }
