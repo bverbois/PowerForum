@@ -2,7 +2,6 @@ import express from "express";
 import { errorCheck } from "./src/scripts/errorCheck.js";
 import path from "path";
 import {
-  getUsersByMessages,
   submitUser,
   authenticateUser,
   removeSubscription,

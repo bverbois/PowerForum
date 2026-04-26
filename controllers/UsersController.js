@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb";
 import { Database } from "../connections/database.js";
-import { getTopicsWithLatest } from "./TopicsController.js";
 
 const collectionName = "users";
 const database = Database.getInstance();
@@ -24,9 +23,6 @@ export async function authenticateUser(user) {
     password: user.password,
   };
 
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
-
   const response = await collection.findOne(userToValidate, {
     projection: { password: 0 },
   });
@@ -35,8 +31,6 @@ export async function authenticateUser(user) {
 }
 
 export async function getUserWithSubscriptions(id) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const oid = new ObjectId(id);
   const response = await collection.findOne(
     { _id: oid },
@@ -49,8 +43,6 @@ export async function getUserWithSubscriptions(id) {
 }
 
 export async function getSubscriptions(id) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const oid = new ObjectId(id);
   const response = await collection.findOne(
     { _id: oid },
@@ -63,8 +55,6 @@ export async function getSubscriptions(id) {
 }
 
 export async function getUsersByMessages(messages) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   var messageIds = [];
   var users = [];
 
@@ -86,8 +76,6 @@ export async function getUsersByMessages(messages) {
 }
 
 export async function getSubscribedUsers(topicId, senderId) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   var users = [];
   const results = await collection
     .find(
@@ -114,9 +102,6 @@ export async function getSubscribedUsers(topicId, senderId) {
 }
 
 export async function updateUnreadStatus(senderId, topicId, bool) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
-
   const response = await collection.updateMany(
     { "topics._id": topicId, _id: { $ne: senderId } },
     { $set: { "topics.$[topic].hasUnread": bool } },
@@ -125,8 +110,6 @@ export async function updateUnreadStatus(senderId, topicId, bool) {
 }
 
 export async function markUnreadFalse(userId, topicId) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const userOid = new ObjectId(userId);
   const topicOid = new ObjectId(topicId);
 
@@ -140,8 +123,6 @@ export async function markUnreadFalse(userId, topicId) {
 }
 
 export async function removeSubscription(userId, topicId) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const userOid = new ObjectId(userId);
   const topicOid = new ObjectId(topicId);
   const result = await collection.updateOne(
@@ -151,8 +132,6 @@ export async function removeSubscription(userId, topicId) {
 }
 
 export async function addSubscription(userId, topicId) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const userOid = new ObjectId(userId);
   const topicOid = new ObjectId(topicId);
   const result = await collection.updateOne(

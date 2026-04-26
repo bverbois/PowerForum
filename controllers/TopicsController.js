@@ -1,7 +1,9 @@
 import { Database } from "../connections/database.js";
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 
 const collectionName = "topics";
+const database = Database.getInstance();
+const collection = database.collection(collectionName);
 
 export async function submitTopic(topic) {
   const topicToCreate = {
@@ -12,15 +14,11 @@ export async function submitTopic(topic) {
     accessCounter: 0,
   };
 
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const response = await collection.insertOne(topicToCreate);
   return response;
 }
 
 export async function getAllTopics() {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   let response = await collection.find({}).toArray();
 
   let topicIds = [];
@@ -37,9 +35,6 @@ export async function getAllTopics() {
 }
 
 export async function getTopicsWithLatest(topics) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
-
   let topicIds = [];
 
   topics.forEach((topic) => {
@@ -66,8 +61,6 @@ export async function getTopicsWithLatest(topics) {
 export async function getTopic(topicId) {
   const oid = new ObjectId(topicId);
 
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const response = await collection.findOne({ _id: oid });
 
   collection.updateOne({ _id: oid }, { $inc: { accessCounter: 1 } });

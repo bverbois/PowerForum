@@ -8,60 +8,61 @@
   </head>
   <body>
     <div id="navbar"></div>
-    <div
-      style="
-        padding-left: 30%;
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        justify-content: center;
-      "
-    >
-      <h1>User Login</h1>
-      <form id="form1">
-        <div class="flex-row">
-          <input
-            id="username"
-            type="text"
-            name="username"
-            value=""
-            placeholder="Username"
-          />
-          <label class="asterisk">*</label>
-        </div>
-        <div class="flex-row">
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value=""
-            placeholder="Password"
-          />
-          <label class="asterisk">*</label>
-        </div>
-        <div style="display: flex; gap: 5%; padding-top: 5%">
-          <button
-            type="submit"
-            id="submit-btn"
-            name="submit-btn"
-            form="form1"
-            class="submit"
-          >
-            Submit
-          </button>
-          <button
-            onclick="window.location.href = '/user/create'"
-            id="register-button"
-            name="register-button"
-            type="button"
-            class="submit"
-          >
-            Register
-          </button>
-        </div>
-        <br />
-        <label id="error" style="color: red; font-size: x-large"></label>
-      </form>
+    <div style="width: 80%">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-content: center;
+          justify-content: center;
+        "
+      >
+        <h1>User Login</h1>
+        <form id="form1">
+          <div class="flex-row">
+            <input
+              id="username"
+              type="text"
+              name="username"
+              value=""
+              placeholder="Username"
+            />
+            <label class="asterisk">*</label>
+          </div>
+          <div class="flex-row">
+            <input
+              id="password"
+              type="password"
+              name="password"
+              value=""
+              placeholder="Password"
+            />
+            <label class="asterisk">*</label>
+          </div>
+          <div style="display: flex; gap: 5%; padding-top: 3%">
+            <button
+              type="submit"
+              id="submit-btn"
+              name="submit-btn"
+              form="form1"
+              class="submit"
+            >
+              Submit
+            </button>
+            <button
+              onclick="window.location.href = '/user/create'"
+              id="register-button"
+              name="register-button"
+              type="button"
+              class="submit"
+            >
+              Register
+            </button>
+          </div>
+          <br />
+          <label id="error" style="color: red; font-size: x-large"></label>
+        </form>
+      </div>
     </div>
   </body>
 </html>

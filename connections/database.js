@@ -53,28 +53,4 @@ export class Database {
     client.close();
     console.log("Client connection closed...");
   }
-
-  openChangeStream() {
-    run(this);
-  }
-}
-
-async function run(that) {
-  const collection = that.collection("topics");
-  const changeStream = collection.watch([
-    {
-      $match: {
-        "updateDescription.updatedFields.messages": { $exists: true },
-      },
-    },
-  ]);
-
-  changeStream
-    .on("change", (next) => {
-      console.log("something changed");
-      console.log(JSON.stringify(next, null, 2));
-    })
-    .once("error", (error) => {
-      console.log(error);
-    });
 }

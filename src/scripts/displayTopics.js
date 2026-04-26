@@ -39,6 +39,7 @@ data.body.forEach((topic) => {
   header.style = "display: flex; align-items: center";
   title.textContent = topic.name;
   title.href = `./topic/${topic._id}`;
+  description.className = "trailoff";
   description.textContent = topic.description;
 
   subscription.addEventListener("click", async (event) => {
