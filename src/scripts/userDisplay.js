@@ -2,12 +2,11 @@ const response = await fetch("/api/get/user");
 const data = await response.json();
 
 const username = document.getElementById("username-header");
-const topics = document.getElementById("topics-div");
+const container = document.getElementById("topics-div");
 
 username.textContent = `Welcome, ${data.body.username}`;
 
 if (data.body.topics.length > 0) {
-  const container = document.createElement("div");
   data.body.topics.forEach((topic) => {
     const topicElement = document.createElement("div");
     const header = document.createElement("div");
@@ -22,6 +21,8 @@ if (data.body.topics.length > 0) {
     name.textContent = `${topic.name}`;
     name.href = `./topic/${topic._id}`;
 
+    header.style = "display: flex; align-items: center";
+
     unsubscribe.addEventListener("click", (event) => {
       fetch(`/api/delete/subscription/${topicElement.id}`);
       container.removeChild(topicElement);
@@ -33,7 +34,7 @@ if (data.body.topics.length > 0) {
 
         message.id = msg._id;
         message.textContent = `${msg.username}: ${msg.body}`;
-        message.className = "trailoff"
+        message.className = "trailoff";
 
         messages.appendChild(message);
       });
@@ -45,5 +46,4 @@ if (data.body.topics.length > 0) {
     topicElement.appendChild(messages);
     container.appendChild(topicElement);
   });
-  topics.appendChild(container);
 }

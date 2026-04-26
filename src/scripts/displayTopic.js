@@ -43,8 +43,6 @@ subscription.addEventListener("click", async (event) => {
     await fetch(`/api/delete/subscription/${id}`);
     subscription.className = "subscribe-topic-listing";
     subscription.name = "unsubscribed";
-  } else {
-    console.log("something bad happened rip");
   }
   checkIfSubscribed();
 });

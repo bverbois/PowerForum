@@ -23,22 +23,26 @@ export async function checkIfSubscribed() {
   }
 }
 
-function notSubscribed() {
-  if (document.getElementById("message-submit-container")) {
-    const temp = document.getElementById("message-submit-container");
-    messageSubmit.removeChild(temp);
-  }
-  const container = document.createElement("div");
-  const content = document.createElement("div");
-  const icon = document.createElement("div");
-  container.id = "message-submit-container";
-  content.textContent = "Subscribe to post a message...";
-  container.className = "oneline";
-  icon.className = "block";
+async function notSubscribed() {
+  await fetch("../views/topic-display-form.html")
+    .then((response) => response.text())
+    .then((data) => {
+      if (document.getElementById("message-submit-container")) {
+        const temp = document.getElementById("message-submit-container");
+        messageSubmit.removeChild(temp);
+      }
+      const container = document.createElement("div");
+      container.id = "message-submit-container";
+      container.innerHTML = data;
+      messageSubmit.appendChild(container);
 
-  container.appendChild(icon);
-  container.appendChild(content);
-  messageSubmit.appendChild(container);
+      const messageBody = document.getElementById("message-body");
+      messageBody.className = "block-message";
+      messageBody.placeholder = "Subscribe to post a message...";
+
+      const submitButton = document.getElementById("message-submit-btn");
+      submitButton.classList.add("block-submit");
+    });
 }
 
 async function subscribed() {
@@ -89,11 +93,10 @@ function messageElement() {
       body: JSON.stringify(data),
     });
     const result = await response.json();
-    () => {
-      if (document.getElementById("no-messages")) {
-        messages.removeChild(document.getElementById("no-messages"));
-      }
-    };
+
+    if (document.getElementById("no-messages")) {
+      messages.removeChild(document.getElementById("no-messages"));
+    }
     const container = document.createElement("div");
     const content = document.createElement("p");
     const username = document.createElement("p");

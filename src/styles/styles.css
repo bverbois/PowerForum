@@ -14,8 +14,8 @@
   background-position: center;
   background-color: transparent;
   border-color: transparent;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
 }
 
 .block {
@@ -37,6 +37,7 @@
 label.asterisk {
   color: red;
   flex-basis: 0%;
+  padding-left: 1%;
 }
 
 button.subscribe {
@@ -103,17 +104,13 @@ button.submit {
   font-size: 2rem;
 }
 
+button.block-submit {
+  pointer-events: none;
+}
+
 button.submit:hover {
   background: rgba(255, 193, 7, 0.1);
   border-color: rgb(255, 193, 7);
-}
-
-.logout {
-  background-image: url(./icons/arrow-right-from-bracket-solid-full.svg);
-}
-
-.logout:hover {
-  background-color: rgba(1, 36, 59);
 }
 
 button.create {
@@ -166,11 +163,17 @@ button.create {
   height: 60px;
 }
 
+.logout {
+  background-image: url(./icons/arrow-right-from-bracket-solid-full.svg);
+}
+
 div.stats-container {
-  padding: 10px;
   margin-top: 8px;
-  padding-top: 6px;
-  padding-bottom: 6px;
+  padding-top: 8px;
+  padding-bottom: 7px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-bottom: 8px;
   border-radius: 8px;
 }
 
@@ -229,6 +232,15 @@ textarea {
   font-size: xx-large;
 }
 
+.block-message {
+  background: transparent;
+  border: 2px solid rgba(255, 0, 0, 0.5);
+  border-radius: 8px;
+  color: white;
+  font-size: xx-large;
+  pointer-events: none;
+}
+
 .message-username {
   font-weight: bold;
 }
@@ -259,8 +271,8 @@ body {
   background-color: rgba(0, 16, 26);
   display: flex;
   flex-direction: row;
-  gap: 100px;
   margin-top: 0;
+  gap: 2%;
 }
 
 .center {
@@ -305,11 +317,17 @@ h3 {
   margin: 1px;
 }
 
+h2 {
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
 a,
 p,
 div,
 table,
-input {
+input,
+textarea {
   color: rgb(255, 255, 255);
   font-family: sans-serif;
   font-size: 2rem;
