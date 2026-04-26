@@ -2,8 +2,6 @@
 
 <html>
   <head>
-    <!-- Styles aren't working, idk why yet -->
-    <!-- <link rel="stylesheet" href="styles.css" /> -->
     <script defer type="module" src="../scripts/invalidLogin.js"></script>
     <script defer type="module" src="../scripts/appendNavbar.js"></script>
     <link rel="stylesheet" href="../styles/styles.css" />
@@ -21,7 +19,7 @@
     >
       <h1>User Login</h1>
       <form id="form1">
-        <div class="center">
+        <div class="flex-row">
           <input
             id="username"
             type="text"
@@ -29,16 +27,17 @@
             value=""
             placeholder="Username"
           />
-          <br />
+          <label class="asterisk">*</label>
         </div>
-        <div class="center">
+        <div class="flex-row">
           <input
             id="password"
             type="password"
             name="password"
             value=""
             placeholder="Password"
-          /><br />
+          />
+          <label class="asterisk">*</label>
         </div>
         <div style="display: flex; gap: 5%; padding-top: 5%">
           <button

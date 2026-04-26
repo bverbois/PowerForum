@@ -2,31 +2,55 @@
 
 <html>
   <head>
-    <link rel="stylesheet" href="../styles/styles.css" />
     <script defer type="module" src="../scripts/appendNavbar.js"></script>
-  </head>
+    <script defer type="module" src="../scripts/invalidRegister.js"></script>
 
+    <link rel="stylesheet" href="../styles/styles.css" />
+  </head>
   <body id="body1">
     <div id="navbar"></div>
     <div style="padding-left: 30%">
       <h1>Register</h1>
-      <form action="/api/post/user" method="POST">
-        <div class="center">
-          <input type="text" name="name" value="" placeholder="Name" /> <br />
+      <form id="form1">
+        <div class="flex-row">
+          <input type="text" name="name" value="" placeholder="Name" />
+          <label class="asterisk">*</label>
         </div>
-        <div class="center">
+        <div class="flex-row">
           <input type="text" name="username" value="" placeholder="Username" />
-          <br />
+          <label class="asterisk">*</label>
         </div>
-        <div class="center">
+        <div class="flex-row">
           <input
             type="Password"
             name="password"
             value=""
             placeholder="Password"
-          /><br />
+          />
+          <label class="asterisk">*</label>
         </div>
-        <button type="submit" name="submit" class="submit">Submit</button>
+        <div style="display: flex; gap: 5%; padding-top: 5%">
+          <button
+            type="submit"
+            id="submit-btn"
+            name="submit"
+            form="form1"
+            class="submit"
+          >
+            Submit
+          </button>
+          <button
+            type="button"
+            onclick="window.location.href = '/user/login'"
+            class="submit"
+          >
+            Cancel
+          </button>
+        </div>
+        <label
+          id="error"
+          style="color: red; font-size: x-large; margin-top: 5%"
+        ></label>
       </form>
     </div>
   </body>

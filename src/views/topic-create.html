@@ -4,20 +4,25 @@
   <head>
     <link rel="stylesheet" href="../styles/styles.css" />
     <script defer type="module" src="../scripts/appendNavbar.js"></script>
+    <script defer type="module" src="../scripts/createTopic.js"></script>
   </head>
   <body id="body1" style="display: flex">
     <div id="navbar"></div>
     <div style="padding-left: 30%">
       <h1>New Topic</h1>
-      <form action="/api/post/topic" method="POST">
+      <form id="form1">
         <div style="display: flex; flex-direction: column">
-          <input
-            type="text"
-            name="name"
-            value=""
-            placeholder="Name..."
-            style="box-sizing: border-box; width: 100%"
-          />
+          <div class="flex-row">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value=""
+              placeholder="Name..."
+              style="box-sizing: border-box; width: 100%"
+            />
+            <label class="asterisk">*</label>
+          </div>
           <textarea
             id="description"
             name="description"
@@ -27,8 +32,20 @@
           ></textarea>
         </div>
         <div style="padding-top: 3%">
-          <button type="submit" name="submit" class="submit">Submit</button>
+          <button
+            type="submit"
+            id="submit-btn"
+            form="form1"
+            name="submit"
+            class="submit"
+          >
+            Submit
+          </button>
         </div>
+        <label
+          id="error"
+          style="color: red; font-size: x-large; margin-top: 5%"
+        ></label>
       </form>
     </div>
   </body>
