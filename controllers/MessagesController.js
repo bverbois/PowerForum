@@ -1,6 +1,6 @@
 import { Database } from "../connections/database.js";
 import { MongoClient, ObjectId } from "mongodb";
-import { forumEmmitter } from "../events.js";
+import { forumEmmitter } from "../services/notificationService.js";
 
 const collectionName = "topics";
 const database = Database.getInstance();

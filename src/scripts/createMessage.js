@@ -65,6 +65,7 @@ function messageElement() {
 
   async function submitWatch(event) {
     event.preventDefault();
+    error.textContent = "";
 
     var hasError = false;
     const formData = new FormData(messageForm);

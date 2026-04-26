@@ -9,7 +9,6 @@ import {
   addSubscription,
   getUserWithSubscriptions,
   getSubscriptions,
-  checkUnread,
   markUnreadFalse,
 } from "./controllers/UsersController.js";
 import {
@@ -76,12 +75,24 @@ app.get("/", function (req, res) {
 });
 
 app.post("/api/authenticate", async function (req, res) {
+  if (
+    !req.body.username ||
+    req.body.username.trim().length === 0 ||
+    !req.body.password ||
+    req.body.password.trim().length === 0
+  ) {
+    return res.status(400).json({
+      authenticated: false,
+      message: "Username/password cannot be empty.",
+    });
+  }
+
   const result = await authenticateUser(req.body);
 
   if (!result) {
     return res.status(400).json({
       authenticated: false,
-      message: "Username/password is incorrect",
+      message: "Username/password is incorrect.",
     });
   }
 
@@ -97,9 +108,13 @@ app.post("/api/authenticate", async function (req, res) {
 });
 
 app.post("/api/post/user", async function (req, res) {
-  await submitUser(req.body);
+  try {
+    var result = await submitUser(req.body);
+  } catch (error) {
+    return res.status(400).json({ body: error });
+  }
 
-  res.redirect("/user/login");
+  return res.status(200).json({ body: result });
 });
 
 app.get("/api/get/user", async function (req, res) {
@@ -133,14 +148,6 @@ app.get("/api/post/subscription/:id", async function (req, res) {
 app.get("/api/get/subscriptions", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await getSubscriptions(req.session.user.id);
-
-    return res.status(200).json({ body: response });
-  }
-});
-
-app.get("/api/get/user/hasUnread", async function (req, res) {
-  if (checkCookie(req, res)) {
-    const response = await checkUnread(req.session.user.id);
 
     return res.status(200).json({ body: response });
   }
@@ -185,11 +192,15 @@ app.get("/user", function (req, res) {
 
 app.post("/api/post/topic", async function (req, res) {
   if (checkCookie(req, res)) {
+    if (!req.body.name || req.body.name.trim().length === 0) {
+      return res.status(400).json({ body: "Name cannot be empty." });
+    }
+
     const result = await submitTopic(req.body);
     const topicId = result.insertedId.toString();
     await addSubscription(req.session.user.id, topicId);
 
-    res.redirect("/topics");
+    return res.status(200).json({ body: result });
   }
 });
 

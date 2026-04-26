@@ -1,12 +1,14 @@
 const form = document.forms["form1"];
+const errElement = document.getElementById("error");
 
 async function check(event) {
+  errElement.textContent = "";
   event.preventDefault();
 
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
 
-  const response = await fetch("/api/authenticate", {
+  var response = await fetch("/api/authenticate", {
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(data),
@@ -15,10 +17,7 @@ async function check(event) {
   const result = await response.json();
 
   if (!result.authenticated) {
-    const errElement = document.getElementById("error");
-    const usernameInput = document.getElementById("username");
-
-    errElement.textContent = "Username or Password is incorrect.";
+    errElement.textContent = result.message;
   } else if (result.authenticated) {
     window.location.href = "/user";
   }

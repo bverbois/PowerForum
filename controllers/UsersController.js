@@ -3,6 +3,8 @@ import { Database } from "../connections/database.js";
 import { getTopicsWithLatest } from "./TopicsController.js";
 
 const collectionName = "users";
+const database = Database.getInstance();
+const collection = database.collection(collectionName);
 
 export async function submitUser(user) {
   const userToCreate = {
@@ -13,8 +15,6 @@ export async function submitUser(user) {
     topics: [],
   };
 
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
   const response = await collection.insertOne(userToCreate);
 }
 
@@ -110,11 +110,6 @@ export async function getSubscribedUsers(topicId, senderId) {
   for await (let user of results) {
     users.push(user);
   }
-
-  console.log(users);
-
-  console.log("finished");
-
   return results;
 }
 
@@ -142,28 +137,6 @@ export async function markUnreadFalse(userId, topicId) {
     },
     { $set: { "topics.$.hasUnread": false } },
   );
-}
-
-export async function checkUnread(userId) {
-  const database = Database.getInstance();
-  const collection = database.collection(collectionName);
-
-  const response = await collection.findOne(
-    {
-      _id: userId,
-    },
-    {
-      projection: {
-        password: 0,
-        messages: 0,
-        topics: 0,
-        name: 0,
-        username: 0,
-      },
-    },
-  );
-
-  return response;
 }
 
 export async function removeSubscription(userId, topicId) {

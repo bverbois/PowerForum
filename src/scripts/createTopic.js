@@ -8,7 +8,8 @@ async function check(event) {
   const formData = new FormData(form);
   const data = Object.fromEntries(formData.entries());
 
-  var response = await fetch("/api/post/user", {
+  console.log(data);
+  var response = await fetch("/api/post/topic", {
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(data),
@@ -17,15 +18,9 @@ async function check(event) {
   const result = await response.json();
 
   if (!response.ok) {
-    if (result.body.code === 11000) {
-      errElement.textContent = "Username is already taken.";
-    } else if (result.body.code === 121) {
-      errElement.textContent = "All fields are required.";
-    } else {
-      errElement.textContent = "There was an error creating your account.";
-    }
+    errElement.textContent = result.body;
   } else {
-    window.location.href = "/user/login";
+    window.location.href = "/topics";
   }
 }
 

@@ -8,14 +8,16 @@
     background-color: transparent;
   "
 >
-  <textarea
-    id="message-body"
-    name="message-body"
-    rows="3"
-    cols="70"
-    placeholder="Write a new message..."
-  ></textarea>
-  <br />
+  <div class="flex-row">
+    <textarea
+      id="message-body"
+      name="message-body"
+      rows="3"
+      cols="70"
+      placeholder="Write a new message..."
+    ></textarea>
+    <label class="asterisk">*</label>
+  </div>
   <button
     type="submit"
     form="message-create-form"
