@@ -36,7 +36,7 @@ if (data.body.topics.length > 0) {
       fetch(`/api/delete/subscription/${topicElement.id}`);
       container.removeChild(topicElement);
       const topicToRemove = data.body.topics.find((x) => x._id === topic._id);
-      data.body.topics.pop(topicToRemove);
+      data.body.topics = data.body.topics.filter((x) => x._id !== topic._id);
       data.body.topics.length === 0
         ? noTopicsMessage()
         : console.log("whats happening");
