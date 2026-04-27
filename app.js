@@ -9,6 +9,8 @@ import {
   getUserWithSubscriptions,
   getSubscriptions,
   markUnreadFalse,
+  removeMessage,
+  deleteUser,
 } from "./controllers/UsersController.js";
 import {
   deleteTopic,
@@ -21,7 +23,11 @@ import { Database } from "./connections/database.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import dotenv from "dotenv";
-import { submitMessage } from "./controllers/MessagesController.js";
+import {
+  deleteMessage,
+  deleteMessagesByUserId,
+  submitMessage,
+} from "./controllers/MessagesController.js";
 import "./services/notificationService.js";
 
 dotenv.config();
@@ -131,6 +137,24 @@ app.get("/api/user/:id", async function (req, res) {
   return res.status(200).json({ body: result });
 });
 
+//Make sure to redirect to /user/logout after getting response
+//on front end
+app.get("/api/delete/user", async function (req, res) {
+  if (checkCookie) {
+    const result = await deleteUser(req.session.user.id);
+    const removeMessageResult = await deleteMessagesByUserId(
+      req.session.user.id,
+    );
+    console.log(removeMessageResult);
+    if (result.deletedCount === 0) {
+      return res.status(400).json({ body: result });
+    }
+    res.clearCookie("auth");
+    res.clearCookie("connect.sid");
+    return res.status(200).json({ body: { result, removeMessageResult } });
+  }
+});
+
 app.get("/api/delete/subscription/:id", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await removeSubscription(
@@ -235,16 +259,18 @@ app.get("/api/topic/:id", async function (req, res) {
   }
 });
 
-app.get("/api/delete/topic/:id", async function (req, res) {
-  const id = req.params["id"];
-  const response = await deleteTopic(id);
-  const responseRemoveSub = await removeSubscription(req.session.user.id, id);
-  console.log(responseRemoveSub.modifiedCount);
-  if (response.deleteCount === 0) {
-    return res.status(404).json({ body: response });
-  }
+app.delete("/api/delete/topic/:id", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const id = req.params["id"];
+    const response = await deleteTopic(id);
+    const responseRemoveSub = await removeSubscription(req.session.user.id, id);
+    console.log(responseRemoveSub.modifiedCount);
+    if (response.deleteCount === 0) {
+      return res.status(404).json({ body: response });
+    }
 
-  return res.status(200).json({ body: response });
+    return res.status(200).json({ body: response });
+  }
 });
 
 app.get("/topic/create", function (req, res) {
@@ -295,5 +321,25 @@ app.post("/api/post/message", async function (req, res) {
   if (checkCookie(req, res)) {
     const response = await submitMessage(req.body, req.session.user);
     return res.status(201).json({ body: response });
+  }
+});
+
+app.get("/api/delete/message/:id", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const id = req.params["id"];
+
+    const response = await deleteMessage(id);
+    const removeMessageResponse = await removeMessage(id);
+
+    if (
+      response.modifiedCount === 0 ||
+      removeMessageResponse.modifiedCount == 0
+    ) {
+      return res
+        .status(404)
+        .json({ body: { response, removeMessageResponse } });
+    }
+
+    return res.status(200).json({ body: { response, removeMessageResponse } });
   }
 });

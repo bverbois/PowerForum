@@ -57,6 +57,13 @@ export async function getSubscriptions(id) {
   return response;
 }
 
+export async function deleteUser(id) {
+  const response = await collection.deleteOne({ _id: new ObjectId(id) });
+  console.log(response);
+
+  return response;
+}
+
 export async function getUsersByMessages(messages) {
   var messageIds = [];
   var users = [];
@@ -145,4 +152,14 @@ export async function addSubscription(userId, topicId) {
   );
 
   return result;
+}
+
+export async function removeMessage(id) {
+  const oid = new ObjectId(id);
+
+  const response = await collection.updateMany(
+    {},
+    { $pull: { messages: { _id: oid } } },
+  );
+  return response;
 }

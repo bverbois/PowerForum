@@ -19,10 +19,10 @@ export async function submitMessage(request, user) {
     username: username,
   };
 
-  const topicId = new ObjectId(request.topic_id);
+  const topicOid = new ObjectId(request.topic_id);
 
   const response = await topicsCollection.updateOne(
-    { _id: topicId },
+    { _id: topicOid },
     { $push: { messages: messageToCreate } },
   );
 
@@ -33,10 +33,28 @@ export async function submitMessage(request, user) {
 
   forumEmmitter.emit("newMessage", {
     senderId: userOid,
-    topicId: topicId,
+    topicId: topicOid,
     bool: true,
   });
 
-  console.log(response);
   return messageToCreate;
+}
+
+export async function deleteMessage(id) {
+  const oid = new ObjectId(id);
+
+  const response = await topicsCollection.updateMany(
+    {},
+    { $pull: { messages: { _id: oid } } },
+  );
+  return response;
+}
+
+export async function deleteMessagesByUserId(id) {
+  const response = await topicsCollection.updateMany(
+    {},
+    { $pull: { messages: { userId: new ObjectId(id) } } },
+  );
+
+  return response;
 }
