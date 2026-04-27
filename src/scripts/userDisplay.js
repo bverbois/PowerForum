@@ -35,6 +35,11 @@ if (data.body.topics.length > 0) {
     unsubscribe.addEventListener("click", (event) => {
       fetch(`/api/delete/subscription/${topicElement.id}`);
       container.removeChild(topicElement);
+      const topicToRemove = data.body.topics.find((x) => x._id === topic._id);
+      data.body.topics.pop(topicToRemove);
+      data.body.topics.length === 0
+        ? noTopicsMessage()
+        : console.log("whats happening");
     });
 
     deleteTopicButton.addEventListener("click", (event) => {
@@ -74,4 +79,18 @@ if (data.body.topics.length > 0) {
     topicElement.appendChild(messages);
     container.appendChild(topicElement);
   });
+} else {
+  noTopicsMessage();
+}
+
+function noTopicsMessage() {
+  const noTopics = document.createElement("div");
+  const textElement = document.createElement("h2");
+
+  noTopics.id = "no-topic-div";
+  textElement.textContent = "You aren't subscribed to any topics yet...";
+  textElement.style = "color: gray";
+
+  noTopics.appendChild(textElement);
+  container.appendChild(textElement);
 }
