@@ -11,14 +11,14 @@ import {
   markUnreadFalse,
   removeMessage,
   deleteUser,
-} from "./controllers/UsersController.js";
+} from "./models/UserModel.js";
 import {
   deleteTopic,
   getAllTopics,
   getTopic,
   getTopicsWithLatest,
   submitTopic,
-} from "./controllers/TopicsController.js";
+} from "./models/TopicModel.js";
 import { Database } from "./connections/database.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -27,7 +27,7 @@ import {
   deleteMessage,
   deleteMessagesByUserId,
   submitMessage,
-} from "./controllers/MessagesController.js";
+} from "./models/MessageModel.js";
 import "./services/notificationService.js";
 
 dotenv.config();

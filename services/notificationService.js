@@ -1,4 +1,4 @@
-import { updateUnreadStatus } from "../controllers/UsersController.js";
+import { updateUnreadStatus } from "../models/UserModel.js";
 import EventEmitter from "events";
 
 export const forumEmmitter = new EventEmitter();
