@@ -146,9 +146,15 @@ export async function removeSubscription(userId, topicId) {
 export async function addSubscription(userId, topicId) {
   const userOid = new ObjectId(userId);
   const topicOid = new ObjectId(topicId);
+  const favorite = {
+    _id: topicOid,
+    userId: userOid,
+    hasUnread: false,
+  };
+
   const result = await collection.updateOne(
     { _id: userOid },
-    { $push: { topics: { _id: topicOid } } },
+    { $push: { topics: favorite } },
   );
 
   return result;

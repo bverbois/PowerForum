@@ -46,6 +46,23 @@ label.asterisk {
   padding-left: 1%;
 }
 
+button.delete {
+  background-image: url(./icons/trash-solid-full-red.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 8px;
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+}
+
+button.delete:hover {
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
 button.subscribe {
   background-image: url(./icons/star-regular-full-white.svg);
   background-repeat: no-repeat;

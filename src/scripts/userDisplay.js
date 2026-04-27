@@ -21,18 +21,27 @@ if (data.body.topics.length > 0) {
     const name = document.createElement("a");
     const unsubscribe = document.createElement("button");
     var messages = document.createElement("div");
+    const deleteTopicButton = document.createElement("button");
 
     unsubscribe.className = "unsubscribe";
-
     topicElement.id = topic._id;
     topicElement.className = "topic-container";
     name.textContent = `${topic.name}`;
     name.href = `./topic/${topic._id}`;
+    deleteTopicButton.className = "delete";
 
     header.style = "display: flex; align-items: center";
 
     unsubscribe.addEventListener("click", (event) => {
       fetch(`/api/delete/subscription/${topicElement.id}`);
+      container.removeChild(topicElement);
+    });
+
+    deleteTopicButton.addEventListener("click", (event) => {
+      fetch(`/api/delete/topic/${topicElement.id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
       container.removeChild(topicElement);
     });
 
@@ -55,6 +64,10 @@ if (data.body.topics.length > 0) {
       const unreadIcon = document.createElement("button");
       unreadIcon.className = "unread-messages";
       header.appendChild(unreadIcon);
+    }
+
+    if (topic.userId === sub.userId) {
+      header.appendChild(deleteTopicButton);
     }
 
     topicElement.appendChild(header);

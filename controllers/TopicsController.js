@@ -49,6 +49,7 @@ export async function getTopicsWithLatest(topics) {
     .project({
       name: 1,
       description: 1,
+      userId: 1,
       latestTwo: { $slice: ["$messages", -2] },
     })
     .toArray();
