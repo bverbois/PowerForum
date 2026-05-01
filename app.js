@@ -40,6 +40,7 @@ const server = app.listen(port, () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static("src"));
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -51,34 +52,7 @@ app.use(
   }),
 );
 
-app.use(express.static("src"));
-app.use(express.static("node_modules"));
 
-function checkCookie(req, res) {
-  const cookies = req.cookies;
-  if (!cookies["auth"] || !req.session.user) {
-    res.redirect("/user/login");
-    return false;
-  }
-  return true;
-}
-
-const database = Database.getInstance();
-//Close the db connection on program exit
-process.on("SIGINT", async function () {
-  await database.closeConnection();
-
-  server.close(() => {
-    console.log("Server closed...");
-  });
-});
-
-//This could be a landing page eventually
-app.get("/", function (req, res) {
-  if (checkCookie(req, res)) {
-    res.redirect("/user");
-  }
-});
 
 app.post("/api/authenticate", async function (req, res) {
   if (
@@ -113,6 +87,14 @@ app.post("/api/authenticate", async function (req, res) {
   res.json({ authenticated: true });
 });
 
+app.get("/user/logout", function (req, res) {
+  if (checkCookie) {
+    res.clearCookie("auth");
+    res.clearCookie("connect.sid");
+  }
+  res.redirect("/");
+});
+
 app.post("/api/post/user", async function (req, res) {
   try {
     var result = await submitUser(req.body);
@@ -137,8 +119,6 @@ app.get("/api/user/:id", async function (req, res) {
   return res.status(200).json({ body: result });
 });
 
-//Make sure to redirect to /user/logout after getting response
-//on front end
 app.get("/api/delete/user", async function (req, res) {
   if (checkCookie) {
     const result = await deleteUser(req.session.user.id);
@@ -180,43 +160,6 @@ app.get("/api/get/subscriptions", async function (req, res) {
     const response = await getSubscriptions(req.session.user.id);
 
     return res.status(200).json({ body: response });
-  }
-});
-
-app.get("/user/create", function (req, res) {
-  res.sendFile(
-    path.join(import.meta.dirname, "./src/views/user-create.html"),
-    (err) => {
-      errorCheck(err);
-    },
-  );
-});
-
-app.get("/user/login", function (req, res) {
-  res.sendFile(
-    path.join(import.meta.dirname, "./src/views/user-login.html"),
-    (err) => {
-      errorCheck(err);
-    },
-  );
-});
-
-app.get("/user/logout", function (req, res) {
-  if (checkCookie) {
-    res.clearCookie("auth");
-    res.clearCookie("connect.sid");
-  }
-  res.redirect("/");
-});
-
-app.get("/user", function (req, res) {
-  if (checkCookie(req, res)) {
-    res.sendFile(
-      path.join(import.meta.dirname, "./src/views/user-display.html"),
-      (err) => {
-        errorCheck(err);
-      },
-    );
   }
 });
 
@@ -273,6 +216,70 @@ app.delete("/api/delete/topic/:id", async function (req, res) {
   }
 });
 
+app.post("/api/post/message", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const response = await submitMessage(req.body, req.session.user);
+    return res.status(201).json({ body: response });
+  }
+});
+
+app.get("/api/delete/message/:id", async function (req, res) {
+  if (checkCookie(req, res)) {
+    const id = req.params["id"];
+
+    const response = await deleteMessage(id);
+    const removeMessageResponse = await removeMessage(id);
+
+    if (
+      response.modifiedCount === 0 ||
+      removeMessageResponse.modifiedCount == 0
+    ) {
+      return res
+        .status(404)
+        .json({ body: { response, removeMessageResponse } });
+    }
+
+    return res.status(200).json({ body: { response, removeMessageResponse } });
+  }
+});
+
+//////////////////////////////////////////////////////////////////////////////////
+
+app.get("/", function (req, res) {
+  if (checkCookie(req, res)) {
+    res.redirect("/user");
+  }
+});
+
+app.get("/user/create", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/user-create.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
+});
+
+app.get("/user/login", function (req, res) {
+  res.sendFile(
+    path.join(import.meta.dirname, "./src/views/user-login.html"),
+    (err) => {
+      errorCheck(err);
+    },
+  );
+});
+
+app.get("/user", function (req, res) {
+  if (checkCookie(req, res)) {
+    res.sendFile(
+      path.join(import.meta.dirname, "./src/views/user-display.html"),
+      (err) => {
+        errorCheck(err);
+      },
+    );
+  }
+});
+
 app.get("/topic/create", function (req, res) {
   if (checkCookie(req, res)) {
     res.sendFile(
@@ -317,29 +324,21 @@ app.get("/topics/statistics", function (req, res) {
   }
 });
 
-app.post("/api/post/message", async function (req, res) {
-  if (checkCookie(req, res)) {
-    const response = await submitMessage(req.body, req.session.user);
-    return res.status(201).json({ body: response });
+function checkCookie(req, res) {
+  const cookies = req.cookies;
+  if (!cookies["auth"] || !req.session.user) {
+    res.redirect("/user/login");
+    return false;
   }
-});
+  return true;
+}
 
-app.get("/api/delete/message/:id", async function (req, res) {
-  if (checkCookie(req, res)) {
-    const id = req.params["id"];
+const database = Database.getInstance();
+//Close the db connection on program exit
+process.on("SIGINT", async function () {
+  await database.closeConnection();
 
-    const response = await deleteMessage(id);
-    const removeMessageResponse = await removeMessage(id);
-
-    if (
-      response.modifiedCount === 0 ||
-      removeMessageResponse.modifiedCount == 0
-    ) {
-      return res
-        .status(404)
-        .json({ body: { response, removeMessageResponse } });
-    }
-
-    return res.status(200).json({ body: { response, removeMessageResponse } });
-  }
+  server.close(() => {
+    console.log("Server closed...");
+  });
 });
