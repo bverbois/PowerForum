@@ -1,5 +1,7 @@
-const response = await fetch("/api/get/user");
-const subscriptions = await fetch("/api/get/subscriptions");
+import { apiFetch } from "./apiFetch.js";
+
+const response = await apiFetch("/api/get/user");
+const subscriptions = await apiFetch("/api/get/subscriptions");
 
 const data = await response.json();
 const subscriptionData = await subscriptions.json();
@@ -33,7 +35,7 @@ if (data.body.topics.length > 0) {
     header.style = "display: flex; align-items: center";
 
     unsubscribe.addEventListener("click", (event) => {
-      fetch(`/api/delete/subscription/${topicElement.id}`);
+      apiFetch(`/api/delete/subscription/${topicElement.id}`);
       container.removeChild(topicElement);
       const topicToRemove = data.body.topics.find((x) => x._id === topic._id);
       data.body.topics = data.body.topics.filter((x) => x._id !== topic._id);
@@ -43,7 +45,7 @@ if (data.body.topics.length > 0) {
     });
 
     deleteTopicButton.addEventListener("click", (event) => {
-      fetch(`/api/delete/topic/${topicElement.id}`, {
+      apiFetch(`/api/delete/topic/${topicElement.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

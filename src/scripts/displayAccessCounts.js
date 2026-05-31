@@ -1,4 +1,6 @@
-const response = await fetch("/api/topics");
+import { apiFetch } from "./apiFetch.js";
+
+const response = await apiFetch("/api/topics");
 const data = await response.json();
 
 const container = document.getElementById("table-body");

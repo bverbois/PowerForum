@@ -1,8 +1,9 @@
 import { checkIfSubscribed, getSubIds } from "./createMessage.js";
+import { apiFetch } from "./apiFetch.js";
 
 const paths = window.location.pathname.split("/");
 const id = paths[paths.length - 1];
-const response = await fetch(`/api/topic/${id}`);
+const response = await apiFetch(`/api/topic/${id}`);
 const data = await response.json();
 
 checkIfSubscribed();
@@ -38,11 +39,11 @@ header.appendChild(title);
 
 subscription.addEventListener("click", async (event) => {
   if (subscription.name === "unsubscribed") {
-    await fetch(`/api/post/subscription/${id}`);
+    await apiFetch(`/api/post/subscription/${id}`);
     subscription.className = "unsubscribe-topic-listing";
     subscription.name = "subscribed";
   } else if (subscription.name === "subscribed") {
-    await fetch(`/api/delete/subscription/${id}`);
+    await apiFetch(`/api/delete/subscription/${id}`);
     subscription.className = "subscribe-topic-listing";
     subscription.name = "unsubscribed";
   }

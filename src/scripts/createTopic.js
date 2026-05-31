@@ -1,3 +1,5 @@
+import { apiFetch } from "./apiFetch.js";
+
 const form = document.forms["form1"];
 const errElement = document.getElementById("error");
 
@@ -9,7 +11,7 @@ async function check(event) {
   const data = Object.fromEntries(formData.entries());
 
   console.log(data);
-  var response = await fetch("/api/post/topic", {
+  var response = await apiFetch("/api/post/topic", {
     method: "POST",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify(data),

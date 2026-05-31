@@ -1,6 +1,8 @@
-const response = await fetch("/api/topics");
-const subscriptions = await fetch("/api/get/subscriptions");
-const user = await fetch("/api/get/user");
+import { apiFetch } from "./apiFetch.js";
+
+const response = await apiFetch("/api/topics");
+const subscriptions = await apiFetch("/api/get/subscriptions");
+const user = await apiFetch("/api/get/user");
 
 const data = await response.json();
 const subscriptionData = await subscriptions.json();
@@ -49,7 +51,7 @@ data.body.forEach((topic) => {
 
   subscription.addEventListener("click", async (event) => {
     if (subscription.name === "unsubscribed") {
-      await fetch(`/api/post/subscription/${topicElement.id}`);
+      await apiFetch(`/api/post/subscription/${topicElement.id}`);
 
       subscription.className = "unsubscribe";
       subscription.name = "subscribed";
@@ -59,7 +61,7 @@ data.body.forEach((topic) => {
 
       return;
     } else if (subscription.name === "subscribed") {
-      await fetch(`/api/delete/subscription/${topicElement.id}`);
+      await apiFetch(`/api/delete/subscription/${topicElement.id}`);
 
       subscription.className = "subscribe";
       subscription.name = "unsubscribed";
@@ -74,7 +76,7 @@ data.body.forEach((topic) => {
   });
 
   deleteTopicButton.addEventListener("click", (event) => {
-    fetch(`/api/delete/topic/${topicElement.id}`, {
+    apiFetch(`/api/delete/topic/${topicElement.id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });

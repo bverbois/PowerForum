@@ -1,3 +1,5 @@
+import { apiFetch } from "./apiFetch.js";
+
 const paths = window.location.pathname.split("/");
 const topicId = paths[paths.length - 1];
 const messageSubmit = document.getElementById("message-submit");
@@ -71,7 +73,7 @@ function messageElement() {
     formData.append("topic_id", topicId);
 
     const data = Object.fromEntries(formData.entries());
-    const response = await fetch("/api/post/message", {
+    const response = await apiFetch("/api/post/message", {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(data),
@@ -107,7 +109,7 @@ function messageElement() {
 }
 
 export async function getSubIds() {
-  const response = await fetch("/api/get/subscriptions");
+  const response = await apiFetch("/api/get/subscriptions");
   const subscriptions = await response.json();
   var subIds = [];
   subscriptions.body.topics.forEach((topic) => {
