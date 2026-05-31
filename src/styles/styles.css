@@ -20,6 +20,7 @@
   background-size: contain;
   background-position: center;
   background-color: transparent;
+  background-color: transparent;
   border-color: transparent;
   width: 40px;
   height: 40px;
@@ -58,6 +59,7 @@ button.delete {
   margin-left: auto;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
 }
 
 button.delete:hover {
@@ -74,6 +76,7 @@ button.subscribe {
   border-radius: 8px;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
 }
 
 button.unsubscribe {
@@ -86,6 +89,7 @@ button.unsubscribe {
   border-radius: 8px;
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
 }
 
 button.unsubscribe:hover,
@@ -102,6 +106,7 @@ button.subscribe-topic-listing {
   border-color: transparent;
   width: 60px;
   height: 60px;
+  flex-shrink: 0;
 }
 
 button.unsubscribe-topic-listing {
@@ -113,6 +118,13 @@ button.unsubscribe-topic-listing {
   border-color: transparent;
   width: 60px;
   height: 60px;
+  flex-shrink: 0;
+}
+
+button.subscribe-topic-listing:hover,
+button.unsubscribe-topic-listing:hover {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-radius: 8px;
 }
 
 button.submit {
@@ -126,10 +138,6 @@ button.submit {
   font-weight: 500;
   transition: all 0.1s ease-in-out;
   font-size: 2rem;
-}
-
-button.block-submit {
-  pointer-events: none;
 }
 
 button.submit:hover {
@@ -228,14 +236,32 @@ div.stats-container:hover {
   background-color: rgba(1, 36, 59);
 }
 
+.link-subtle {
+  color: rgba(255, 193, 7, 0.7);
+  font-size: 1.4rem;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  font-family: inherit;
+}
+
+.link-subtle:hover {
+  color: rgb(255, 193, 7);
+}
+
 .navbar {
   display: flex;
   flex-direction: column;
   margin-top: 0%;
   padding: 5px;
   align-items: center;
-  height: 100%;
-  float: left;
+  height: 100vh;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
 }
 
 form {
@@ -277,15 +303,14 @@ textarea {
   border-radius: 8px;
   color: white;
   font-size: xx-large;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.block-message {
-  background: transparent;
-  border: 2px solid rgba(255, 0, 0, 0.5);
-  border-radius: 8px;
-  color: white;
-  font-size: xx-large;
-  pointer-events: none;
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(255, 193, 7);
 }
 
 .message-username {
@@ -296,6 +321,58 @@ textarea {
 .message-container {
   border-bottom: 0.2px solid rgba(255, 193, 7, 0.5);
   width: 80%;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.message-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+button.edit {
+  background-image: url(./icons/pencil-solid-gray.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  background-color: transparent;
+  border-color: transparent;
+  border-radius: 8px;
+  margin-left: auto;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+}
+
+button.edit:hover {
+  background-color: rgba(189, 189, 189, 0.2);
+}
+
+.message-actions button.delete {
+  margin-left: 0;
+  width: 34px;
+  height: 34px;
+}
+
+.edit-message-box {
+  margin-top: 8px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.edit-error {
+  color: red;
+  font-size: x-large;
 }
 
 textarea {
@@ -315,12 +392,19 @@ label {
   padding-right: 10px;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: rgba(0, 16, 26);
   display: flex;
   flex-direction: row;
-  margin-top: 0;
   gap: 2%;
+  padding-right: 2%;
+  min-height: 100vh;
 }
 
 .center {
@@ -385,4 +469,133 @@ textarea {
   color: rgb(255, 255, 255);
   font-family: sans-serif;
   font-size: 1.8rem;
+}
+
+.register-link {
+  color: rgb(255, 193, 7);
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.1s ease-in-out;
+  font-size: 1.2rem;
+  margin-top: 12px;
+  text-decoration: underline;
+}
+
+/* ---------- Home / discovery page ---------- */
+
+.home-layout {
+  display: flex;
+  align-items: stretch;
+  gap: 30px;
+  padding: 20px 0 0;
+}
+
+.home-column {
+  flex: 1;
+  min-width: 0;
+  background-color: rgb(0, 22, 37);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.home-column h1 {
+  text-align: left;
+  margin-top: 0;
+}
+
+/* When either title would overflow one line, displayHome.js adds this class to
+   both so they break one word per line together and stay aligned. */
+.home-column h1.title-stacked {
+  width: min-content;
+}
+
+.topic-creator {
+  color: rgb(189, 189, 189);
+  font-size: 1.2rem;
+  margin: 5px 0 0 5px;
+}
+
+.recent-message {
+  padding: 12px 5px;
+  border-bottom: 0.2px solid rgba(255, 193, 7, 0.5);
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+}
+
+.recent-message:hover {
+  background-color: rgba(1, 36, 59, 0.733);
+  border-radius: 8px;
+}
+
+.recent-message-meta {
+  margin-bottom: 6px;
+}
+
+.recent-message-topic {
+  color: rgb(189, 189, 189);
+  font-size: 1.6rem;
+}
+
+.message-highlight {
+  border-radius: 8px;
+  animation: message-highlight-fade 1s ease-out forwards;
+}
+
+@keyframes message-highlight-fade {
+  0% {
+    background-color: rgba(255, 193, 7, 0.25);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* ---------- Confirmation modal ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: rgb(1, 36, 59);
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 90%;
+  width: 480px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.modal-text {
+  color: rgb(255, 255, 255);
+  font-family: sans-serif;
+  font-size: 1.8rem;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.topic-header-row {
+  display: flex;
+  align-items: center;
+}
+
+.muted {
+  color: gray;
 }

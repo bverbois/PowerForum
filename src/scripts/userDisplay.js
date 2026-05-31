@@ -1,13 +1,13 @@
-const response = await fetch("/api/get/user");
-const subscriptions = await fetch("/api/get/subscriptions");
+import { apiFetch } from "./apiFetch.js";
+import { confirmDelete } from "./confirmModal.js";
+
+const response = await apiFetch("/api/get/user");
+const subscriptions = await apiFetch("/api/get/subscriptions");
 
 const data = await response.json();
 const subscriptionData = await subscriptions.json();
 
-let subIds = [];
-subscriptionData.body.topics.forEach((sub) => {
-  subIds.push(sub._id);
-});
+const currentUserId = data.body._id;
 
 const username = document.getElementById("username-header");
 const container = document.getElementById("topics-div");
@@ -20,7 +20,7 @@ if (data.body.topics.length > 0) {
     const header = document.createElement("div");
     const name = document.createElement("a");
     const unsubscribe = document.createElement("button");
-    var messages = document.createElement("div");
+    const messages = document.createElement("div");
     const deleteTopicButton = document.createElement("button");
 
     unsubscribe.className = "unsubscribe";
@@ -30,24 +30,40 @@ if (data.body.topics.length > 0) {
     name.href = `./topic/${topic._id}`;
     deleteTopicButton.className = "delete";
 
-    header.style = "display: flex; align-items: center";
+    header.className = "topic-header-row";
 
-    unsubscribe.addEventListener("click", (event) => {
-      fetch(`/api/delete/subscription/${topicElement.id}`);
+    unsubscribe.addEventListener("click", async () => {
+      const unsubResponse = await apiFetch(
+        `/api/delete/subscription/${topicElement.id}`,
+      );
+      if (!unsubResponse.ok) {
+        return;
+      }
       container.removeChild(topicElement);
-      const topicToRemove = data.body.topics.find((x) => x._id === topic._id);
       data.body.topics = data.body.topics.filter((x) => x._id !== topic._id);
-      data.body.topics.length === 0
-        ? noTopicsMessage()
-        : console.log("whats happening");
+      if (data.body.topics.length === 0) {
+        noTopicsMessage();
+      }
     });
 
-    deleteTopicButton.addEventListener("click", (event) => {
-      fetch(`/api/delete/topic/${topicElement.id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-      container.removeChild(topicElement);
+    deleteTopicButton.addEventListener("click", async () => {
+      const confirmed = await confirmDelete(
+        "Are you sure you want to delete this topic?",
+      );
+      if (!confirmed) {
+        return;
+      }
+
+      const deleteResponse = await apiFetch(
+        `/api/delete/topic/${topicElement.id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+      if (deleteResponse.ok) {
+        container.removeChild(topicElement);
+      }
     });
 
     if (topic.latestTwo?.length > 0) {
@@ -64,14 +80,14 @@ if (data.body.topics.length > 0) {
 
     header.appendChild(unsubscribe);
     header.appendChild(name);
-    const sub = subscriptionData.body.topics.find((x) => x._id == topic._id);
+    const sub = subscriptionData.body.topics.find((x) => x._id === topic._id);
     if (sub?.hasUnread) {
       const unreadIcon = document.createElement("button");
       unreadIcon.className = "unread-messages";
       header.appendChild(unreadIcon);
     }
 
-    if (topic.userId === sub.userId) {
+    if (topic.userId === currentUserId) {
       header.appendChild(deleteTopicButton);
     }
 
@@ -89,8 +105,8 @@ function noTopicsMessage() {
 
   noTopics.id = "no-topic-div";
   textElement.textContent = "You aren't subscribed to any topics yet...";
-  textElement.style = "color: gray";
+  textElement.className = "muted";
 
   noTopics.appendChild(textElement);
-  container.appendChild(textElement);
+  container.appendChild(noTopics);
 }
