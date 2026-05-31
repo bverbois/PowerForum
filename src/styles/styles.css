@@ -590,3 +590,12 @@ textarea {
   justify-content: center;
   gap: 16px;
 }
+
+.topic-header-row {
+  display: flex;
+  align-items: center;
+}
+
+.muted {
+  color: gray;
+}

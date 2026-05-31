@@ -1,5 +1,6 @@
-import { renderMessageForm, getSubIds } from "./createMessage.js";
+import { renderMessageForm } from "./createMessage.js";
 import { apiFetch } from "./apiFetch.js";
+import { getSubscribedIds, bindSubscriptionToggle } from "./subscriptions.js";
 import { buildMessageElement, getCurrentUserId } from "./renderMessage.js";
 
 const paths = window.location.pathname.split("/");
@@ -8,7 +9,7 @@ const response = await apiFetch(`/api/topic/${id}`);
 const data = await response.json();
 
 renderMessageForm();
-let subIds = await getSubIds();
+const subIds = await getSubscribedIds();
 
 const header = document.getElementById("header");
 const buttonContainer = document.getElementById("button-container");
@@ -26,28 +27,14 @@ description.textContent = `${data.body.description}`;
 if (data.body.username) {
   username.textContent = `created by ${data.body.username}`;
 }
-if (subIds.includes(id)) {
-  subscription.name = "subscribed";
-  subscription.className = "unsubscribe-topic-listing";
-} else {
-  subscription.name = "unsubscribed";
-  subscription.className = "subscribe-topic-listing";
-}
-
 buttonContainer.appendChild(subscription);
 header.appendChild(buttonContainer);
 header.appendChild(title);
 
-subscription.addEventListener("click", async (event) => {
-  if (subscription.name === "unsubscribed") {
-    await apiFetch(`/api/post/subscription/${id}`);
-    subscription.className = "unsubscribe-topic-listing";
-    subscription.name = "subscribed";
-  } else if (subscription.name === "subscribed") {
-    await apiFetch(`/api/delete/subscription/${id}`);
-    subscription.className = "subscribe-topic-listing";
-    subscription.name = "unsubscribed";
-  }
+bindSubscriptionToggle(subscription, id, {
+  subscribedClass: "unsubscribe-topic-listing",
+  unsubscribedClass: "subscribe-topic-listing",
+  isSubscribed: subIds.includes(id),
 });
 
 const currentUserId = await getCurrentUserId();

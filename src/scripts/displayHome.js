@@ -1,5 +1,6 @@
 import { apiFetch } from "./apiFetch.js";
 import { confirmDelete } from "./confirmModal.js";
+import { bindSubscriptionToggle } from "./subscriptions.js";
 
 const topicsContainer = document.getElementById("popular-topics");
 const messagesContainer = document.getElementById("recent-messages");
@@ -63,15 +64,7 @@ async function renderPopularTopics() {
     const creator = document.createElement("p");
 
     topicElement.className = "topic-container";
-    header.style = "display: flex; align-items: center";
-
-    if (subIds.includes(topic._id)) {
-      subscription.name = "subscribed";
-      subscription.className = "unsubscribe";
-    } else {
-      subscription.name = "unsubscribed";
-      subscription.className = "subscribe";
-    }
+    header.className = "topic-header-row";
 
     title.textContent = topic.name;
     title.href = `./topic/${topic._id}`;
@@ -79,16 +72,10 @@ async function renderPopularTopics() {
     creator.className = "topic-creator";
     creator.textContent = `created by ${topic.username ?? "unknown"}`;
 
-    subscription.addEventListener("click", async () => {
-      if (subscription.name === "unsubscribed") {
-        await apiFetch(`/api/post/subscription/${topic._id}`);
-        subscription.className = "unsubscribe";
-        subscription.name = "subscribed";
-      } else {
-        await apiFetch(`/api/delete/subscription/${topic._id}`);
-        subscription.className = "subscribe";
-        subscription.name = "unsubscribed";
-      }
+    bindSubscriptionToggle(subscription, topic._id, {
+      subscribedClass: "unsubscribe",
+      unsubscribedClass: "subscribe",
+      isSubscribed: subIds.includes(topic._id),
     });
 
     deleteTopicButton.className = "delete";
@@ -99,11 +86,13 @@ async function renderPopularTopics() {
       if (!confirmed) {
         return;
       }
-      await apiFetch(`/api/delete/topic/${topic._id}`, {
+      const response = await apiFetch(`/api/delete/topic/${topic._id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
-      topicElement.remove();
+      if (response.ok) {
+        topicElement.remove();
+      }
     });
 
     header.appendChild(subscription);
@@ -162,7 +151,7 @@ async function renderRecentMessages() {
 
 function placeholder(text) {
   const element = document.createElement("h2");
-  element.style = "color: gray";
+  element.className = "muted";
   element.textContent = text;
   return element;
 }
