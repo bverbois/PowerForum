@@ -1,4 +1,5 @@
 import { apiFetch } from "./apiFetch.js";
+import { confirmDelete } from "./confirmModal.js";
 
 const response = await apiFetch("/api/get/user");
 const subscriptions = await apiFetch("/api/get/subscriptions");
@@ -44,8 +45,15 @@ if (data.body.topics.length > 0) {
         : console.log("whats happening");
     });
 
-    deleteTopicButton.addEventListener("click", (event) => {
-      apiFetch(`/api/delete/topic/${topicElement.id}`, {
+    deleteTopicButton.addEventListener("click", async (event) => {
+      const confirmed = await confirmDelete(
+        "Are you sure you want to delete this topic?",
+      );
+      if (!confirmed) {
+        return;
+      }
+
+      await apiFetch(`/api/delete/topic/${topicElement.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

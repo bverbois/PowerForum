@@ -40,12 +40,24 @@ export async function submitMessage(request, user) {
   return messageToCreate;
 }
 
-export async function deleteMessage(id) {
+export async function deleteMessage(id, userId) {
   const oid = new ObjectId(id);
+  const userOid = new ObjectId(userId);
 
   const response = await topicsCollection.updateMany(
     {},
-    { $pull: { messages: { _id: oid } } },
+    { $pull: { messages: { _id: oid, userId: userOid } } },
+  );
+  return response;
+}
+
+export async function updateMessage(id, userId, newBody) {
+  const oid = new ObjectId(id);
+  const userOid = new ObjectId(userId);
+
+  const response = await topicsCollection.updateOne(
+    { "messages._id": oid, "messages.userId": userOid },
+    { $set: { "messages.$.body": newBody } },
   );
   return response;
 }

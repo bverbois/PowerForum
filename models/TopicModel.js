@@ -22,7 +22,24 @@ export async function submitTopic(topic, userId) {
 }
 
 export async function getAllTopics() {
-  let response = await collection.find({}).toArray();
+  let response = await collection
+    .aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $addFields: {
+          username: { $arrayElemAt: ["$creator.username", 0] },
+        },
+      },
+      { $project: { creator: 0 } },
+    ])
+    .toArray();
 
   let topicIds = [];
   response.forEach((topic) => {
@@ -33,6 +50,30 @@ export async function getAllTopics() {
     { _id: { $in: topicIds } },
     { $inc: { accessCounter: 1 } },
   );
+
+  return response;
+}
+
+export async function getRecentMessagesForSubscriptions(topicIds, excludeUserId) {
+  const excludeOid = new ObjectId(excludeUserId);
+
+  const response = await collection
+    .aggregate([
+      { $match: { _id: { $in: topicIds } } },
+      { $unwind: "$messages" },
+      { $match: { "messages.userId": { $ne: excludeOid } } },
+      { $sort: { "messages._id": -1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          _id: 0,
+          topicId: "$_id",
+          topicName: "$name",
+          message: "$messages",
+        },
+      },
+    ])
+    .toArray();
 
   return response;
 }

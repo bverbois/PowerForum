@@ -19,7 +19,7 @@ async function check(event) {
   if (!result.authenticated) {
     errElement.textContent = result.message;
   } else if (result.authenticated) {
-    window.location.href = "/user";
+    window.location.href = "/";
   }
 }
 

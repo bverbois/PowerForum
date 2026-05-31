@@ -46,7 +46,9 @@ app.get("/user/logout", function (req, res) {
 //////////////////////////////////////////////////////////////////////////////////
 
 app.get("/", requirePageAuth, function (req, res) {
-  res.redirect("/user");
+  res.sendFile(path.join(import.meta.dirname, "./src/views/home.html"), (err) => {
+    errorCheck(err);
+  });
 });
 
 app.get("/user/create", function (req, res) {

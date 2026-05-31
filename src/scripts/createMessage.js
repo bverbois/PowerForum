@@ -1,47 +1,24 @@
 import { apiFetch } from "./apiFetch.js";
+import { buildMessageElement, getCurrentUserId } from "./renderMessage.js";
 
 const paths = window.location.pathname.split("/");
 const topicId = paths[paths.length - 1];
 const messageSubmit = document.getElementById("message-submit");
 
-async function notSubscribed() {
-  await fetch("../views/topic-display-form.html")
-    .then((response) => response.text())
-    .then((data) => {
-      if (document.getElementById("message-submit-container")) {
-        const temp = document.getElementById("message-submit-container");
-        messageSubmit.removeChild(temp);
-      }
+export async function renderMessageForm() {
+  const response = await fetch("../views/topic-display-form.html");
+  const data = await response.text();
 
-      const container = document.createElement("div");
-      const messageBody = document.getElementById("message-body");
-      const submitButton = document.getElementById("message-submit-btn");
+  if (document.getElementById("message-submit-container")) {
+    const temp = document.getElementById("message-submit-container");
+    messageSubmit.removeChild(temp);
+  }
 
-      container.id = "message-submit-container";
-      container.innerHTML = data;
-      messageBody.className = "block-message";
-      messageBody.placeholder = "Subscribe to post a message...";
-      submitButton.classList.add("block-submit");
+  const container = document.createElement("div");
+  container.id = "message-submit-container";
+  container.innerHTML = data;
+  messageSubmit.appendChild(container);
 
-      messageSubmit.appendChild(container);
-    });
-}
-
-async function subscribed() {
-  await fetch("../views/topic-display-form.html")
-    .then((response) => response.text())
-    .then((data) => {
-      if (document.getElementById("message-submit-container")) {
-        const temp = document.getElementById("message-submit-container");
-        messageSubmit.removeChild(temp);
-      }
-      const container = document.createElement("div");
-
-      container.id = "message-submit-container";
-      container.innerHTML = data;
-
-      messageSubmit.appendChild(container);
-    });
   messageElement();
 }
 
@@ -84,21 +61,9 @@ function messageElement() {
       messages.removeChild(document.getElementById("no-messages"));
     }
 
-    const container = document.createElement("div");
-    const content = document.createElement("p");
-    const username = document.createElement("p");
-
-    container.className = "message-container";
-    content.id = result.body._id;
-    content.textContent = result.body.body;
-    username.id = result.body.userId;
-    username.textContent = result.body.username;
-    username.className = "message-username";
+    const currentUserId = await getCurrentUserId();
+    messages.prepend(buildMessageElement(result.body, currentUserId));
     messageBody.value = "";
-
-    container.appendChild(username);
-    container.appendChild(content);
-    messages.prepend(container);
 
     if (hasError) {
       messageForm.removeChild(error);
@@ -116,13 +81,4 @@ export async function getSubIds() {
     subIds.push(topic._id);
   });
   return subIds;
-}
-
-export async function checkIfSubscribed() {
-  const subIds = await getSubIds();
-  if (!subIds.includes(topicId)) {
-    notSubscribed();
-  } else {
-    subscribed();
-  }
 }

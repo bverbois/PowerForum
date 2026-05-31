@@ -1,12 +1,13 @@
-import { checkIfSubscribed, getSubIds } from "./createMessage.js";
+import { renderMessageForm, getSubIds } from "./createMessage.js";
 import { apiFetch } from "./apiFetch.js";
+import { buildMessageElement, getCurrentUserId } from "./renderMessage.js";
 
 const paths = window.location.pathname.split("/");
 const id = paths[paths.length - 1];
 const response = await apiFetch(`/api/topic/${id}`);
 const data = await response.json();
 
-checkIfSubscribed();
+renderMessageForm();
 let subIds = await getSubIds();
 
 const header = document.getElementById("header");
@@ -47,25 +48,13 @@ subscription.addEventListener("click", async (event) => {
     subscription.className = "subscribe-topic-listing";
     subscription.name = "unsubscribed";
   }
-  checkIfSubscribed();
 });
+
+const currentUserId = await getCurrentUserId();
 
 if (data.body.messages?.length > 0) {
   data.body.messages.reverse().forEach((msg) => {
-    const container = document.createElement("div");
-    const content = document.createElement("p");
-    const username = document.createElement("p");
-
-    container.className = "message-container";
-    content.id = msg._id;
-    content.textContent = msg.body;
-    username.id = msg.userId;
-    username.textContent = msg.username;
-    username.className = "message-username";
-
-    container.appendChild(username);
-    container.appendChild(content);
-    messages.appendChild(container);
+    messages.appendChild(buildMessageElement(msg, currentUserId));
   });
 } else {
   const content = document.createElement("p");
@@ -74,4 +63,16 @@ if (data.body.messages?.length > 0) {
   content.textContent = "No messages yet...";
 
   messages.appendChild(content);
+}
+
+const targetMessageId = new URLSearchParams(window.location.search).get(
+  "message",
+);
+if (targetMessageId) {
+  const target = document.getElementById(targetMessageId);
+  if (target) {
+    target.scrollIntoView({ block: "center" });
+    const highlighted = target.parentElement ?? target;
+    highlighted.classList.add("message-highlight");
+  }
 }
