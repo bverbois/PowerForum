@@ -34,7 +34,7 @@ export async function getAllTopics() {
       },
       {
         $addFields: {
-          username: { $arrayElemAt: ["$creator.username", 0] },
+          username: { $ifNull: [{ $arrayElemAt: ["$creator.username", 0] }, "[deleted user]"] },
         },
       },
       { $project: { creator: 0 } },
@@ -111,6 +111,19 @@ export async function getTopic(topicId) {
   collection.updateOne({ _id: oid }, { $inc: { accessCounter: 1 } });
 
   return response;
+}
+
+export async function getTopicsByCreator(userId) {
+  const oid = new ObjectId(userId);
+  return collection
+    .find({ userId: oid })
+    .project({
+      name: 1,
+      description: 1,
+      userId: 1,
+      latestTwo: { $slice: ["$messages", -2] },
+    })
+    .toArray();
 }
 
 export async function deleteTopic(id) {

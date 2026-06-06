@@ -599,3 +599,41 @@ textarea {
 .muted {
   color: gray;
 }
+
+.tab-bar {
+  display: flex;
+  gap: 40px;
+  align-items: flex-end;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
+}
+
+.tab-bar h1 {
+  margin-top: 0;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+
+.tab-active {
+  padding: 0 12px;
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-bottom: 1px solid rgb(0, 22, 37);
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-inactive {
+  color: gray;
+}
+
+.tab-inactive:hover {
+  color: rgb(200, 200, 200);
+}
+
+.tab-content {
+  border: 1px solid rgba(255, 193, 7, 0.5);
+  border-radius: 0 8px 8px 8px;
+  padding: 20px;
+  background-color: rgb(0, 22, 37);
+}

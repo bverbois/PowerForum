@@ -16,16 +16,17 @@
           justify-content: space-between;
         "
       >
-        <h1
-          id="username-header"
-          name="username-header"
-          style="text-align: left"
-        ></h1>
-        <button onclick="window.location.href = '/topics'" class="submit">
-          See all topics
-        </button>
+        <h1 id="username-header"></h1>
+        <!-- delete account button injected by userDisplay.js -->
       </div>
-      <div id="topics-div" name="topics-div"></div>
+      <div class="tab-bar">
+        <h1 id="tab-subscriptions" class="tab-active">Subscriptions</h1>
+        <h1 id="tab-my-topics" class="tab-inactive">My Topics</h1>
+      </div>
+      <div class="tab-content">
+        <div id="subscriptions-div"></div>
+        <div id="my-topics-div" style="display: none"></div>
+      </div>
     </div>
   </body>
 </html>
