@@ -4,6 +4,7 @@ import {
   deleteTopic,
   getAllTopics,
   getTopic,
+  getTopicsByCreator,
   submitTopic,
 } from "../models/TopicModel.js";
 import {
@@ -33,12 +34,18 @@ router.get("/api/topics", requireApiAuth, async function (req, res) {
   return res.status(200).json({ body: response });
 });
 
+router.get("/api/topics/created", requireApiAuth, async function (req, res) {
+  const result = await getTopicsByCreator(req.session.user.id);
+
+  return res.status(200).json({ body: result });
+});
+
 router.get("/api/topic/:id", requireApiAuth, async function (req, res) {
   const id = req.params["id"];
   var response = await getTopic(id);
   const update = await markUnreadFalse(req.session.user.id, id);
   const user = await getUserWithSubscriptions(response.userId);
-  response.username = user?.username;
+  response.username = user?.username ?? "[deleted user]";
   console.log(response);
 
   if (response === null) {

@@ -1,50 +1,135 @@
 import { apiFetch } from "./apiFetch.js";
 import { confirmDelete } from "./confirmModal.js";
+import { bindSubscriptionToggle } from "./subscriptions.js";
 
-const response = await apiFetch("/api/get/user");
-const subscriptions = await apiFetch("/api/get/subscriptions");
+const [userRes, subsRes, createdRes] = await Promise.all([
+  apiFetch("/api/get/user"),
+  apiFetch("/api/get/subscriptions"),
+  apiFetch("/api/topics/created"),
+]);
 
-const data = await response.json();
-const subscriptionData = await subscriptions.json();
+const data = await userRes.json();
+const subscriptionData = await subsRes.json();
+const createdData = await createdRes.json();
 
 const currentUserId = data.body._id;
 
 const username = document.getElementById("username-header");
-const container = document.getElementById("topics-div");
+const subscriptionsDiv = document.getElementById("subscriptions-div");
+const myTopicsDiv = document.getElementById("my-topics-div");
+const tabSubscriptions = document.getElementById("tab-subscriptions");
+const tabMyTopics = document.getElementById("tab-my-topics");
 
 username.textContent = `Welcome, ${data.body.username}`;
 
-if (data.body.topics.length > 0) {
-  data.body.topics.forEach((topic) => {
+const deleteUserButton = document.createElement("button");
+deleteUserButton.className = "cancel";
+deleteUserButton.textContent = "Delete account";
+deleteUserButton.addEventListener("click", async () => {
+  const confirmed = await confirmDelete(
+    "Are you sure you want to delete your account?",
+  );
+  if (!confirmed) {
+    return;
+  }
+  const response = await apiFetch("/api/delete/user");
+  if (response.ok) {
+    window.location.href = "/user/login";
+  }
+});
+username.parentElement.appendChild(deleteUserButton);
+
+const tabContent = document.querySelector(".tab-content");
+
+tabSubscriptions.addEventListener("click", () => {
+  tabSubscriptions.className = "tab-active";
+  tabMyTopics.className = "tab-inactive";
+  tabContent.style.borderRadius = "0 8px 8px 8px";
+  subscriptionsDiv.style.display = "";
+  myTopicsDiv.style.display = "none";
+});
+
+tabMyTopics.addEventListener("click", () => {
+  tabMyTopics.className = "tab-active";
+  tabSubscriptions.className = "tab-inactive";
+  tabContent.style.borderRadius = "8px 0 8px 8px";
+  myTopicsDiv.style.display = "";
+  subscriptionsDiv.style.display = "none";
+});
+
+const subscribedTopics = data.body.topics.filter(
+  (topic) => topic.userId?.toString() !== currentUserId,
+);
+
+if (subscribedTopics.length > 0) {
+  subscribedTopics.forEach((topic) => {
     const topicElement = document.createElement("div");
     const header = document.createElement("div");
     const name = document.createElement("a");
     const unsubscribe = document.createElement("button");
     const messages = document.createElement("div");
-    const deleteTopicButton = document.createElement("button");
 
-    unsubscribe.className = "unsubscribe";
     topicElement.id = topic._id;
     topicElement.className = "topic-container";
-    name.textContent = `${topic.name}`;
+    header.className = "topic-header-row";
+    name.textContent = topic.name;
+    name.href = `./topic/${topic._id}`;
+
+    bindSubscriptionToggle(unsubscribe, topic._id, {
+      subscribedClass: "unsubscribe",
+      unsubscribedClass: "subscribe",
+      isSubscribed: true,
+      onChange: () => {
+        subscriptionsDiv.removeChild(topicElement);
+        if (subscriptionsDiv.children.length === 0) {
+          subscriptionsDiv.appendChild(placeholder("No subscriptions yet..."));
+        }
+      },
+    });
+
+    const sub = subscriptionData.body.topics.find(
+      (x) => x._id === topic._id,
+    );
+    if (sub?.hasUnread) {
+      const unreadIcon = document.createElement("button");
+      unreadIcon.className = "unread-messages";
+      header.appendChild(unreadIcon);
+    }
+
+    if (topic.latestTwo?.length > 0) {
+      topic.latestTwo.forEach((msg) => {
+        const message = document.createElement("div");
+        message.id = msg._id;
+        message.textContent = `${msg.username}: ${msg.body}`;
+        message.className = "trailoff";
+        messages.appendChild(message);
+      });
+    }
+
+    header.appendChild(unsubscribe);
+    header.appendChild(name);
+    topicElement.appendChild(header);
+    topicElement.appendChild(messages);
+    subscriptionsDiv.appendChild(topicElement);
+  });
+} else {
+  subscriptionsDiv.appendChild(placeholder("No subscriptions yet..."));
+}
+
+if (createdData.body.length > 0) {
+  createdData.body.forEach((topic) => {
+    const topicElement = document.createElement("div");
+    const header = document.createElement("div");
+    const name = document.createElement("a");
+    const deleteTopicButton = document.createElement("button");
+    const messages = document.createElement("div");
+
+    topicElement.id = topic._id;
+    topicElement.className = "topic-container";
+    header.className = "topic-header-row";
+    name.textContent = topic.name;
     name.href = `./topic/${topic._id}`;
     deleteTopicButton.className = "delete";
-
-    header.className = "topic-header-row";
-
-    unsubscribe.addEventListener("click", async () => {
-      const unsubResponse = await apiFetch(
-        `/api/delete/subscription/${topicElement.id}`,
-      );
-      if (!unsubResponse.ok) {
-        return;
-      }
-      container.removeChild(topicElement);
-      data.body.topics = data.body.topics.filter((x) => x._id !== topic._id);
-      if (data.body.topics.length === 0) {
-        noTopicsMessage();
-      }
-    });
 
     deleteTopicButton.addEventListener("click", async () => {
       const confirmed = await confirmDelete(
@@ -53,60 +138,41 @@ if (data.body.topics.length > 0) {
       if (!confirmed) {
         return;
       }
-
-      const deleteResponse = await apiFetch(
-        `/api/delete/topic/${topicElement.id}`,
-        {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-        },
-      );
-      if (deleteResponse.ok) {
-        container.removeChild(topicElement);
+      const response = await apiFetch(`/api/delete/topic/${topic._id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.ok) {
+        myTopicsDiv.removeChild(topicElement);
+        if (myTopicsDiv.children.length === 0) {
+          myTopicsDiv.appendChild(placeholder("No topics created yet..."));
+        }
       }
     });
 
     if (topic.latestTwo?.length > 0) {
       topic.latestTwo.forEach((msg) => {
         const message = document.createElement("div");
-
         message.id = msg._id;
         message.textContent = `${msg.username}: ${msg.body}`;
         message.className = "trailoff";
-
         messages.appendChild(message);
       });
     }
 
-    header.appendChild(unsubscribe);
     header.appendChild(name);
-    const sub = subscriptionData.body.topics.find((x) => x._id === topic._id);
-    if (sub?.hasUnread) {
-      const unreadIcon = document.createElement("button");
-      unreadIcon.className = "unread-messages";
-      header.appendChild(unreadIcon);
-    }
-
-    if (topic.userId === currentUserId) {
-      header.appendChild(deleteTopicButton);
-    }
-
+    header.appendChild(deleteTopicButton);
     topicElement.appendChild(header);
     topicElement.appendChild(messages);
-    container.appendChild(topicElement);
+    myTopicsDiv.appendChild(topicElement);
   });
 } else {
-  noTopicsMessage();
+  myTopicsDiv.appendChild(placeholder("No topics created yet..."));
 }
 
-function noTopicsMessage() {
-  const noTopics = document.createElement("div");
-  const textElement = document.createElement("h2");
-
-  noTopics.id = "no-topic-div";
-  textElement.textContent = "You aren't subscribed to any topics yet...";
-  textElement.className = "muted";
-
-  noTopics.appendChild(textElement);
-  container.appendChild(noTopics);
+function placeholder(text) {
+  const el = document.createElement("h2");
+  el.className = "muted";
+  el.textContent = text;
+  return el;
 }
