@@ -14,10 +14,13 @@ A lightweight discussion forum where users can create topics, post messages, and
 
 ## Tech Stack
 
-Runtime : Node.js
-Server : Express.js
-Database: MongoDB
-Frontend: Vanilla HTML/CSS/JavaScript
+| Layer    | Technology                                   |
+| -------- | -------------------------------------------- |
+| Runtime  | Node.js                                      |
+| Server   | Express.js                                   |
+| Database | MongoDB (Atlas)                              |
+| Sessions | express-session                              |
+| Frontend | Vanilla HTML / CSS / JavaScript (ES modules) |
 
 ## Getting Started
 
