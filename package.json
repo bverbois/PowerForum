@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@anthropic-ai/claude-code": "^2.1.200",
     "@mantine/core": "^9.0.2",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.0",
